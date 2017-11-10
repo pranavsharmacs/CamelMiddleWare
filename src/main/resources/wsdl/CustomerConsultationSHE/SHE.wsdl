@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsdLocal1="http://www.siebel.com/xml/BGCSoapException/V1" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://siebel.com/CustomUI" targetNamespace="http://siebel.com/CustomUI">
+	<types>
+		<xsd:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xsdLocal1="http://www.siebel.com/xml/BGCSoapException/V1" targetNamespace="http://www.siebel.com/xml/BGCSoapException/V1" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:annotation>
+				<xsd:documentation>Copyright (C) 2001-2004 Siebel Systems, Inc. All rights reserved. Siebel XSD Generation</xsd:documentation>
+			</xsd:annotation>
+			<xsd:element name="BGCException" type="xsdLocal1:BGCException"/>
+			<xsd:complexType name="BGCExceptionTopElmt">
+				<xsd:sequence>
+					<xsd:element name="BGCException" maxOccurs="1" minOccurs="1" type="xsdLocal1:BGCException"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="BGCException">
+				<xsd:sequence>
+					<xsd:element name="Originator" maxOccurs="1" minOccurs="0" type="xsd:string"/>
+					<xsd:element name="CorrelationId" maxOccurs="1" minOccurs="0" type="xsd:string"/>
+					<xsd:element name="ErrorCode" maxOccurs="1" minOccurs="0" type="xsd:string"/>
+					<xsd:element name="ErrorType" maxOccurs="1" minOccurs="0" type="xsd:string"/>
+					<xsd:element name="Description" maxOccurs="1" minOccurs="0" type="xsd:string"/>
+					<xsd:element name="DetailDescription" maxOccurs="1" minOccurs="0" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:schema>
+		<xsd:schema elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://siebel.com/CustomUI" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:import namespace="http://www.siebel.com/xml/BGCSoapException/V1"/>
+			<xsd:element name="BGCCustomerConsultationgetCustomerMigrationStatus_2_Input">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Process_spcInstance_spcId" type="xsd:string"/>
+						<xsd:element name="Customer_spcId" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="BGCCustomerConsultationgetCustomerMigrationStatus_2_Output">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="xsdLocal1:BGCException"/>
+						<xsd:element name="Customer_spcId" type="xsd:string"/>
+						<xsd:element name="Migration_spcStatus" type="xsd:string"/>
+						<xsd:element name="Process_spcInstance_spcId" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</types>
+	<message name="BGCCustomerConsultationgetCustomerMigrationStatus_2_Input">
+		<part name="BGCCustomerConsultationgetCustomerMigrationStatus_2_Input" element="tns:BGCCustomerConsultationgetCustomerMigrationStatus_2_Input"/>
+	</message>
+	<message name="BGCCustomerConsultationgetCustomerMigrationStatus_2_Output">
+		<part name="BGCCustomerConsultationgetCustomerMigrationStatus_2_Output" element="tns:BGCCustomerConsultationgetCustomerMigrationStatus_2_Output"/>
+	</message>
+	<portType name="BGC_spcMCH_spcCustomer_spcConsultation">
+		<operation name="BGCCustomerConsultationgetCustomerMigrationStatus_2">
+			<input message="tns:BGCCustomerConsultationgetCustomerMigrationStatus_2_Input"/>
+			<output message="tns:BGCCustomerConsultationgetCustomerMigrationStatus_2_Output"/>
+		</operation>
+	</portType>
+	<binding name="BGC_spcMCH_spcCustomer_spcConsultation" type="tns:BGC_spcMCH_spcCustomer_spcConsultation">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="BGCCustomerConsultationgetCustomerMigrationStatus_2">
+			<soap:operation soapAction="document/http://siebel.com/CustomUI:BGCCustomerConsultationgetCustomerMigrationStatus_2"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="BGC_spcMCH_spcCustomer_spcConsultation">
+		<port name="BGC_spcMCH_spcCustomer_spcConsultation" binding="tns:BGC_spcMCH_spcCustomer_spcConsultation">
+			<soap:address location="http://ozoi6102.bc:8930/eai_anon_enu/start.swe?SWEExtSource=AnonWebService&amp;SWEExtCmd=Execute"/>
+		</port>
+	</service>
+</definitions>
