@@ -1,0 +1,17 @@
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+   <env:Header>
+      <wsa:MessageID>urn:26464040C5FF11E79F4A4BA57A6F1172</wsa:MessageID>
+      <wsa:ReplyTo>
+         <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
+         <wsa:ReferenceParameters>
+            <instra:tracking.compositeInstanceCreatedTime xmlns:instra="http://xmlns.oracle.com/sca/tracking/1.0">2017-11-10T11:08:50.292+01:00</instra:tracking.compositeInstanceCreatedTime>
+         </wsa:ReferenceParameters>
+      </wsa:ReplyTo>
+      <wsa:FaultTo>
+         <wsa:Address>http://www.w3.org/2005/08/addressing/anonymous</wsa:Address>
+         <wsa:ReferenceParameters>
+            <instra:tracking.compositeInstanceCreatedTime xmlns:instra="http://xmlns.oracle.com/sca/tracking/1.0">2017-11-10T11:08:50.292+01:00</instra:tracking.compositeInstanceCreatedTime>
+         </wsa:ReferenceParameters>
+      </wsa:FaultTo>
+   </env:Header>
+   <env:Body>

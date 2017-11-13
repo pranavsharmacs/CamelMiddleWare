@@ -32,7 +32,7 @@ public class AuditLog {
 		builder.append("\nAudit log for message where:");
 		builder.append("\n----------------------------------------------------------------------");
 		builder.append("\nSoap Action::"+headers.get("SOAPAction"));
-		builder.append("\nCorrelation ID::"+headers.get("correlationId"));
+		builder.append("\nCorrelation ID::"+headers.get("JMSCorrelationID"));
 		builder.append("\n"+auditInfo);
 		LOGGER.info(builder.toString());
 
