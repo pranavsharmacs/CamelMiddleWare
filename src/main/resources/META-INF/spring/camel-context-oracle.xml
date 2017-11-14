@@ -47,59 +47,59 @@
 			<camel:to uri="bean:auditProcessor?method=process" />
 		</camel:onException>
     
-    <!-- Route definition to send the messaegs to Elastic search -->
-              <camel:route id="MCOM_AIA_SIEBEL">
-                     <camel:from uri="ref:mcomOrderStatusInQ" />
-                     <!-- <camel:to uri="elasticsearch://audit4sel?ip=el1796.bc&amp;port=9300&amp;operation=INDEX&amp;indexName=SPRINGCAMEL&amp;indexType=SPRINGCAMEL"/> -->
-                     <camel:setHeader headerName="ConsumerId">
-                           <camel:simple>${properties:sonic.mcom.q.username}</camel:simple>
-                     </camel:setHeader>
-                     <camel:setHeader headerName="OrderProgress">
-                           <camel:simple>${properties:sonic.mcom.q.actionName}</camel:simple>
-                     </camel:setHeader>
-                     <camel:setHeader headerName="EventDataOrderProgress">
-                           <camel:simple>${properties:sonic.mcom.q.subActionName}</camel:simple>
-                     </camel:setHeader>
-                     <camel:setHeader headerName="MessageStartTime">
-                           <camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
-                     </camel:setHeader>
-                     <camel:setHeader headerName="EnvironmentName">
-                           <camel:simple>${properties:env.name}</camel:simple>
-                     </camel:setHeader>
-                     <camel:setHeader headerName="MessageOriginSystem">
-                           <camel:simple>${properties:sonic.mcom.q.name}</camel:simple>
-                     </camel:setHeader>
-                     <camel:setHeader headerName="MessageDestinationSystem">
-                           <camel:simple>${properties:oracle.aq.name}</camel:simple>
-                     </camel:setHeader>
-                     <camel:to
-                           uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed Order Status Notification from AIA to SIEBEL Format',true)" />
-                     <camel:to uri="ref:oracleDestinationAQ" />
-                     <camel:to
-                           uri="bean:endpointLogger?method=logEvent(*,*,*,'Received 
-                           Order Status Notification from MCOM at AIA',true)" />
-                     <camel:to uri="bean:logAudit?method=process" />
-                     <camel:to
-                            uri="xslt://AIAXslts/Transform_UpdateSalesOrderLineStatusListEBM_Updated.xsl?transformerFactoryClass=net.sf.saxon.TransformerFactoryImpl" />
-                     <camel:to
-                           uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed 
-                           Order Status Notification from MCOM to AIA Format',true)" />
-                     <camel:to uri="bean:logAudit?method=process" />
-                     <camel:to
-                           uri="xslt://AIAXslts/Transform_McomTOSiebel_1.xsl?transformerFactoryClass=net.sf.saxon.TransformerFactoryImpl" />
-                     <camel:to
-                           uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed 
-                           Order Status Notification from AIA to SIEBEL Format',true)" />
-                     <camel:setHeader headerName="MessageEndTime">
-                           <camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
-                     </camel:setHeader>
-                     <camel:setHeader headerName="TransactionStatus">
-                           <camel:simple>SUCCESS</camel:simple>
-                     </camel:setHeader>
-                     <camel:to uri="bean:auditProcessor?method=process" />
- 
-              </camel:route>
+   <!-- Route definition to send the messaegs to Elastic search -->
+		<camel:route id="MCOM_AIA_SIEBEL">
+			<camel:from uri="ref:mcomOrderStatusInQ" />
 
+			<camel:setHeader headerName="ConsumerId">
+				<camel:simple>${properties:sonic.mcom.q.username}</camel:simple>
+			</camel:setHeader>
+			<camel:setHeader headerName="OrderProgress">
+				<camel:simple>${properties:sonic.mcom.q.actionName}</camel:simple>
+			</camel:setHeader>
+			<camel:setHeader headerName="EventDataOrderProgress">
+				<camel:simple>${properties:sonic.mcom.q.subActionName}</camel:simple>
+			</camel:setHeader>
+			<camel:setHeader headerName="MessageStartTime">
+				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
+			</camel:setHeader>
+			<camel:setHeader headerName="EnvironmentName">
+				<camel:simple>${properties:env.name}</camel:simple>
+			</camel:setHeader>
+			<camel:setHeader headerName="MessageOriginSystem">
+				<camel:simple>${properties:sonic.mcom.q.name}</camel:simple>
+			</camel:setHeader>
+			<camel:setHeader headerName="MessageDestinationSystem">
+				<camel:simple>${properties:oracle.aq.name}</camel:simple>
+			</camel:setHeader>
+
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed Order Status Notification from AIA to SIEBEL Format',true)" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Received Order Status Notification from MCOM at AIA',true)" />
+			<camel:to uri="bean:logAudit?method=process" />
+			<camel:to
+				uri="xslt://AIAXslts/Transform_UpdateSalesOrderLineStatusListEBM_Updated.xsl?transformerFactoryClass=net.sf.saxon.TransformerFactoryImpl" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed Order Status Notification from MCOM to AIA Format',true)" />
+			<camel:to uri="bean:logAudit?method=process" />
+			
+			<camel:to uri="xslt://AIAXslts/Transform_McomTOSiebel_1.xsl?transformerFactoryClass=net.sf.saxon.TransformerFactoryImpl" />
+			<camel:to uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed Order Status Notification from AIA to SIEBEL Format',true)" />
+			<camel:to uri="bean:logAudit?method=process" />
+			
+			<camel:to uri="ref:oracleDestinationAQ" />
+			
+			<camel:setHeader headerName="MessageEndTime">
+				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
+			</camel:setHeader>
+			<camel:setHeader headerName="TransactionStatus">
+				<camel:simple>SUCCESS</camel:simple>
+			</camel:setHeader>
+			
+			<camel:to uri="bean:auditProcessor?method=process" />
+
+		</camel:route>
 
 		<!-- HTTP Service Routes below -->
 		<camel:route id="AIAHttpRoute" streamCache="true">
