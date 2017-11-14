@@ -77,25 +77,26 @@ public class FilterSoapBodyFromRequest {
 		exchange.getOut().setBody(paddedSHESoapRequest, String.class);
 	}
 
-	/*@Handler
-	public void filterSHESoap(Exchange exchange, @Headers Map<String, Object> headers) throws Exception {
-		LOGGER.info("FilterSoapBodyFromRequest::filterSHESoap()::enters");
-
-		String soapRequest = exchange.getIn().getBody(String.class);
-		// System.out.println("Request XML is ::::: " + soapRequest);
-
-		 * String header =
-		 * exchange.getIn().getBody(org.apache.camel.impl.DefaultMessage.class)
-		 * .getBody(org.apache.camel.component.cxf.CxfPayload.class).getHeaders(
-		 * ).toString(); System.out.println("Header : " + header);
-
-		int startIndex = soapRequest.indexOf("<SOAP-ENV:Body>");
-		int endIndex = soapRequest.indexOf("</SOAP-ENV:Body>");
-		String filteredSoapRequest = soapRequest.substring(startIndex + 15, endIndex).trim();
-		// System.out.println("Filtered Soap Request is :
-		// "+soapRequest.substring(startIndex+14, endIndex).trim());
-		exchange.getOut().setBody(filteredSoapRequest, String.class);
-	}*/
+	/*
+	 * @Handler public void filterSHESoap(Exchange exchange, @Headers
+	 * Map<String, Object> headers) throws Exception {
+	 * LOGGER.info("FilterSoapBodyFromRequest::filterSHESoap()::enters");
+	 *
+	 * String soapRequest = exchange.getIn().getBody(String.class); //
+	 * System.out.println("Request XML is ::::: " + soapRequest);
+	 *
+	 * String header =
+	 * exchange.getIn().getBody(org.apache.camel.impl.DefaultMessage.class)
+	 * .getBody(org.apache.camel.component.cxf.CxfPayload.class).getHeaders(
+	 * ).toString(); System.out.println("Header : " + header);
+	 *
+	 * int startIndex = soapRequest.indexOf("<SOAP-ENV:Body>"); int endIndex =
+	 * soapRequest.indexOf("</SOAP-ENV:Body>"); String filteredSoapRequest =
+	 * soapRequest.substring(startIndex + 15, endIndex).trim(); //
+	 * System.out.println("Filtered Soap Request is : //
+	 * "+soapRequest.substring(startIndex+14, endIndex).trim());
+	 * exchange.getOut().setBody(filteredSoapRequest, String.class); }
+	 */
 
 	@Handler
 	public void filterSHESoap(Exchange exchange, @Headers Map<String, Object> headers) throws Exception {
@@ -130,21 +131,23 @@ public class FilterSoapBodyFromRequest {
 				functionalError.setDescription(detailDescription);
 				functionalError.setOriginator("SHE");
 				functionalError.setDescription("Functional");
-				functionalError.setCorrelationId(""+Math.random());
+				functionalError.setCorrelationId("" + Math.random());
 			} else {
 				technicalError = new TechnicalErrorType();
 				technicalError.setCode(Long.parseLong(errorCode));
 				technicalError.setDescription(detailDescription);
 				technicalError.setOriginator("SHE");
 				technicalError.setDescription("Technical");
-				technicalError.setCorrelationId(""+Math.random());
+				technicalError.setCorrelationId("" + Math.random());
 			}
 		}
 
 		if (technicalError != null) {
 			jaxbContext = JAXBContext.newInstance(TechnicalFaultMessage.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-			TechnicalFaultMessage techFaultMsg = new TechnicalFaultMessage("TechnicalFault", new bgc.objects.vss.technicalerror.v1.ObjectFactory().createTechnicalError(technicalError).getValue());
+			TechnicalFaultMessage techFaultMsg = new TechnicalFaultMessage("TechnicalFault",
+					new bgc.objects.vss.technicalerror.v1.ObjectFactory().createTechnicalError(technicalError)
+							.getValue());
 			// output pretty printed
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			StringWriter sw = new StringWriter();
@@ -197,7 +200,8 @@ public class FilterSoapBodyFromRequest {
 		String sheSoapFooter = null;
 		String aia2esbSoapResponseHeader = null;
 		FileInputStream fisTargetFile = null;
-		//remove the <?xml version="1.0" encoding="UTF-8" standalone="yes"?> from the response
+		// remove the <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		// from the response
 		soapResponse = soapResponse.substring(55);
 		if (soapResponse.contains("FunctionalError") || soapResponse.contains("TechnicalError")) {
 			// This is a case of functional error, and treat it accordingly
@@ -206,11 +210,12 @@ public class FilterSoapBodyFromRequest {
 			aia2esbSoapResponseHeader = IOUtils.toString(fisTargetFile, "UTF-8");
 			sheSoapFooter = "</detail></env:Fault></env:Body></env:Envelope>";
 		} else {
-			//System.out.println("Inside FilterSoapBodyFromRequest::padESBSoapEnvelop : " + soapResponse);
-			fisTargetFile = new FileInputStream(
-					new File("src/main/resources/static/AIA2ESBSoapResponseHeader.xml"));
+			// System.out.println("Inside
+			// FilterSoapBodyFromRequest::padESBSoapEnvelop : " + soapResponse);
+			fisTargetFile = new FileInputStream(new File("src/main/resources/static/AIA2ESBSoapResponseHeader.xml"));
 			aia2esbSoapResponseHeader = IOUtils.toString(fisTargetFile, "UTF-8");
-			//System.out.println("aia2esbSoapResponseHeader : " + aia2esbSoapResponseHeader);
+			// System.out.println("aia2esbSoapResponseHeader : " +
+			// aia2esbSoapResponseHeader);
 			sheSoapFooter = "</env:Body></env:Envelope>";
 		}
 
