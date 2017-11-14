@@ -25,9 +25,10 @@
 		<cxf.version>3.1.8</cxf.version>
 		<version.camel>2.18.1</version.camel>
 		<sonic.version>8.5.1</sonic.version>
-		<jdbc.path>C:/Data/Development/CamelMiddleWare/CamelMiddleWare-master/src/main/resources/lib/jdbc-6.jar</jdbc.path>
-		<aqapi.path>C:/Data/Development/CamelMiddleWare/CamelMiddleWare-master/src/main/resources/lib/aqapi-11g.jar</aqapi.path>
-                <spring.boot.mainclass>com.proximus.bootcamel.she.camelmiddleware.CamelmiddlewareApplication</spring.boot.mainclass>
+		<url>${basedir}/src/main/resources/lib</url>
+		<jdbc.path>${url}/jdbc-6.jar</jdbc.path>
+		<aqapi.path>${url}/aqapi-11g.jar</aqapi.path>
+		<spring.boot.mainclass>com.proximus.bootcamel.she.camelmiddleware.CamelmiddlewareApplication</spring.boot.mainclass>
         </properties>
 
 	<dependencies>
