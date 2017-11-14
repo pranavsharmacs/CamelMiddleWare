@@ -208,8 +208,7 @@
 		</property>
 	</bean>
 
-	<bean id="auditProcessor" class="bgc.billing.audit4bil.AuditProcessor" />
-
+        <bean id="auditProcessor" class="com.proximus.bootcamel.she.camelmiddleware.processes.AuditProcessor" />
 	<!-- Define Sonic bean as a JMSComponent to be used by Camel Context, otherwise 
 		Camel Context does not know about how to connect to Sonic -->
 	<bean id="sonic" class="org.apache.camel.component.jms.JmsComponent">
