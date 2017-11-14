@@ -25,11 +25,28 @@
 		<cxf.version>3.1.8</cxf.version>
 		<version.camel>2.18.1</version.camel>
 		<sonic.version>8.5.1</sonic.version>
-		<jdbc.path>C:/Data/Learnings/camelmiddleware/CamelMiddleWare/src/main/resources/lib/jdbc-6.jar</jdbc.path>
-		<aqapi.path>C:/Data/Learnings/camelmiddleware/CamelMiddleWare/src/main/resources/lib/aqapi-11g.jar</aqapi.path>
+		<jdbc.path>C:/Data/Development/CamelMiddleWare/CamelMiddleWare-master/src/main/resources/lib/jdbc-6.jar</jdbc.path>
+		<aqapi.path>C:/Data/Development/CamelMiddleWare/CamelMiddleWare-master/src/main/resources/lib/aqapi-11g.jar</aqapi.path>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.3.4</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-elasticsearch</artifactId>
+			<version>${version.camel}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-activemq</artifactId>
@@ -77,7 +94,8 @@
 			<artifactId>cxf-rt-transports-http-jetty</artifactId>
 			<version>${cxf.version}</version>
 		</dependency>
-		<dependency>
+
+    <dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-bindings-soap</artifactId>
 			<version>${cxf.version}</version>
@@ -93,15 +111,12 @@
 			<artifactId>camel-cxf</artifactId>
 			<version>${version.camel}</version>
 		</dependency>
-		<!-- <dependency> <groupId>org.apache.camel</groupId> <artifactId>camel-cxf</artifactId>
-			<version>${version.camel}</version> </dependency> <dependency> <groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-spring-boot-starter-jaxws</artifactId> <version>${cxf.version}</version>
-			</dependency> apache cxf client <dependency> <groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-frontend-jaxws</artifactId> <version>${cxf.version}</version>
-			</dependency> <dependency> <groupId>org.apache.cxf</groupId> <artifactId>cxf-rt-transports-http</artifactId>
-			<version>${cxf.version}</version> </dependency> <dependency> <groupId>org.apache.cxf</groupId>
-			<artifactId>cxf-rt-transports-http-jetty</artifactId> <version>${cxf.version}</version>
-			</dependency> -->
+		
+    <dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-groovy</artifactId>
+			<version>${version.camel}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -109,12 +124,6 @@
 			<version>${version.camel}</version>
 		</dependency>
 
-
-
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
-			</dependency> -->
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-jdbc</artifactId>
-			</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -193,7 +202,7 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.servicemix.bundles/org.apache.servicemix.bundles.saxon -->
-		<!-- required to overcome "The first argument to the non-static Java function
+		<!-- required to overcome "The first argument to the non-static Java function 
 			'formatDateTime' is not a valid object reference." -->
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
@@ -211,6 +220,7 @@
 	</dependencies>
 
 	<build>
+		<defaultGoal>spring-boot:run</defaultGoal>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
