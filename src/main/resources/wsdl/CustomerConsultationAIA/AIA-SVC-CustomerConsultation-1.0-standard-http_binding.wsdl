@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="AIA-CustomerConsultation-1.0-standard" targetNamespace="urn:v1.customerconsultation.aia.services.bgc" xmlns:wstns="urn:v1.customerconsultation.aia.services.bgc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:stdctx="urn:v4.context.vss.objects.bgc">
+    <wsdl:import namespace="urn:v1.customerconsultation.aia.services.bgc" location="http://ssr.web.bc/repository/AIA/SVC/CustomerConsultation/1.0/AIA-SVC-CustomerConsultation-1.0-standard-def.wsdl"/>
+    <wsdl:types>
+        <xsd:schema targetNamespace="urn:v1.customerconsultation.aia.services.bgc" elementFormDefault="qualified" attributeFormDefault="unqualified">
+            <xsd:import namespace="urn:v4.context.vss.objects.bgc" schemaLocation="http://ssr.web.bc/repository/VSS/OBJ/Context/4.0/VSS-OBJ-Context-4.0.xsd"/>
+        </xsd:schema>
+    </wsdl:types>
+    <!-- ================================================== -->
+    <!-- Messages                                           -->
+    <!-- ================================================== -->
+    <wsdl:message name="VSSContextMessage">
+        <wsdl:part name="Context" element="stdctx:Context"/>
+    </wsdl:message>
+    <!-- ================================================== -->
+    <!-- SOAP Binding                                       -->
+    <!-- ================================================== -->
+    <wsdl:binding name="CustomerConsultationSOAPBinding" type="wstns:CustomerConsultationPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="GetCustomerMigrationStatus">
+            <soap:operation soapAction="GetCustomerMigrationStatus" style="document"/>
+            <wsdl:input name="GetCustomerMigrationStatusInput">
+                <soap:body use="literal"/>
+                <soap:header message="wstns:VSSContextMessage" part="Context" use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GetCustomerMigrationStatusOutput">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="TechnicalFault">
+                <soap:fault use="literal" name="TechnicalFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="FunctionalFault">
+                <soap:fault use="literal" name="FunctionalFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="CheckService">
+            <soap:operation soapAction="CheckService" style="document"/>
+            <wsdl:input name="CheckServiceInput">
+                <soap:body use="literal"/>
+                <soap:header message="wstns:VSSContextMessage" part="Context" use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="CheckServiceOutput">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="TechnicalFault">
+                <soap:fault use="literal" name="TechnicalFault"/>
+            </wsdl:fault>
+            <wsdl:fault name="FunctionalFault">
+                <soap:fault use="literal" name="FunctionalFault"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <!-- ================================================== -->
+    <!-- Service                                            -->
+    <!-- ================================================== -->
+    <wsdl:service name="AIA-CustomerConsultation-1.0-Service">
+        <wsdl:port binding="wstns:CustomerConsultationSOAPBinding" name="AIA-CustomerConsultation-1.0-SOAP-Port">
+            <soap:address location="http://localhost:8003/AIA-SVC-CustomerConsultation"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

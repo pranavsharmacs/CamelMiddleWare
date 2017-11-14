@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by SDE/SDV/ITE (Belgacom) -->
+<xs:schema xmlns:chksvc="urn:v1.checkservice.vss.objects.bgc" xmlns:req0="urn:v1.requestgetcustomermigrationstatus.aia.objects.bgc" xmlns:res0="urn:v1.responsegetcustomermigrationstatus.aia.objects.bgc" xmlns:tns="urn:v1.customerconsultation.aia.services.bgc" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:v1.customerconsultation.aia.services.bgc" version="1.0">
+	<!--=========================================================================
+@BEIM4SOA BEIM4SOA_V3.26.xsd
+
+* File Name      		: AIA-SVC-CustomerConsultation-1.0.xsd
+*
+* Author         		: Srinivas
+* Owner          		: Srinivas
+* Bgc analyst    		: Srinivas
+* Creation date  	    : 02-06-2015
+* Description    		: Service to retrieve Customer Migration Status based on CustomerID
+* Status        		: FINAL
+*
+* History
+*   Srinivas	02-06-2015	1.0	Initial version
+
+=========================================================================-->
+	<xs:import namespace="urn:v1.checkservice.vss.objects.bgc" schemaLocation="http://ssr.web.bc/repository/VSS/OBJ/CheckService/1.0/VSS-OBJ-CheckService-1.0.xsd"/>
+	<xs:import namespace="urn:v1.requestgetcustomermigrationstatus.aia.objects.bgc" schemaLocation="http://ssr.web.bc/repository/AIA/OBJ/RequestGetCustomerMigrationStatus/1.0/AIA-OBJ-RequestGetCustomerMigrationStatus-1.0.xsd"/>
+	<xs:import namespace="urn:v1.responsegetcustomermigrationstatus.aia.objects.bgc" schemaLocation="http://ssr.web.bc/repository/AIA/OBJ/ResponseGetCustomerMigrationStatus/1.0/AIA-OBJ-ResponseGetCustomerMigrationStatus-1.0.xsd"/>
+	<xs:element name="RequestDataGetCustomerMigrationStatus" type="tns:RequestDataGetCustomerMigrationStatusType"/>
+	<xs:complexType name="RequestDataGetCustomerMigrationStatusType">
+		<xs:sequence>
+			<xs:element name="customerIdentifier" type="req0:CustomerIdentifierType"/>
+		</xs:sequence>
+		<xs:attribute default="1.0" name="version" type="xs:string"/>
+	</xs:complexType>
+	<xs:element name="ResponseDataGetCustomerMigrationStatus" type="tns:ResponseDataGetCustomerMigrationStatusType"/>
+	<xs:complexType name="ResponseDataGetCustomerMigrationStatusType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="1" name="customerCharVal" type="res0:CustomerCharValType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="RequestDataCheckService" type="chksvc:RequestDataCheckServiceType"/>
+	<xs:element name="ResponseDataCheckService" type="chksvc:ResponseDataCheckServiceType"/>
+</xs:schema>

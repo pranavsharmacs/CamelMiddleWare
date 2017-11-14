@@ -1,0 +1,8 @@
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+   <env:Header/>
+   <env:Body>
+      <env:Fault xmlns:ns0="urn:v1.customerconsultation.aia.services.bgc">
+         <faultcode>ns0:FunctionalFault</faultcode>
+         <faultstring/>
+         <faultactor/>
+         <detail>
