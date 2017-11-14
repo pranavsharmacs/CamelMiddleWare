@@ -17,3 +17,4 @@ The example can be built with
 The example can be run locally using the following Maven goal:
 
     mvn spring-boot:run -Dspring.profiles.active=_name\_of\_env_ 
+    eg. install spring-boot:run -Dspring.profiles.active=itt when there is a property file named application-itt.properties
