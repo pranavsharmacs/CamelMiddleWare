@@ -12,17 +12,17 @@ import javax.xml.ws.WebFault;
 
 @WebFault(name = "TechnicalError", targetNamespace = "urn:v1.technicalerror.vss.objects.bgc")
 public class TechnicalFaultMessage extends Exception {
-    
-    private bgc.objects.vss.technicalerror.v1.TechnicalErrorType technicalError;
+
+    public bgc.objects.vss.technicalerror.v1.TechnicalErrorType technicalError;
 
     public TechnicalFaultMessage() {
         super();
     }
-    
+
     public TechnicalFaultMessage(String message) {
         super(message);
     }
-    
+
     public TechnicalFaultMessage(String message, Throwable cause) {
         super(message, cause);
     }

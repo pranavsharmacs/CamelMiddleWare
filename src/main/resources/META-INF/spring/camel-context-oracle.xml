@@ -85,10 +85,10 @@
 			</camel:setHeader>
 			<camel:to uri="cxf:bean:soapHttpSiebelEndpoint" />
 			<camel:log message="SHE Response: ${body} >>>>>>>>>>" />
-			<camel:to uri="bean:filterSoapBodyFromRequest?method=filterSHESoapErrors" />
+			<camel:to uri="bean:filterSoapBodyFromRequest?method=filterSHESoap" />
 			<camel:choice>
 				<camel:when>
-					<camel:simple>${header.SOAPError} != 'FunctionalError'</camel:simple>
+					<camel:simple>${header.SOAPError} != 'FunctionalError' and ${header.SOAPError} != 'TechnicalError'</camel:simple>
 					<camel:to
 						uri="xslt://AIAXslts/CustomerConsultation-Http/Transform_CustomerConsultationOutput_to_QueryCustomerPartyEBM_3.xsl" />
 					<camel:to
