@@ -189,7 +189,7 @@
 	<bean id="jmsConnectionFactory" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiTemplate" ref="jndiTemplate" />
 		<!-- Use property below -->
-		<property name="jndiName" value="qcf_aia" />  
+		<property name="jndiName" value="${sonic.mcom.conection-factory.name}" /> 
     <!-- the connection factory object is store under this name -->
 	</bean>
 
