@@ -41,40 +41,40 @@
 			<!-- <camel:to uri="ref:mcomOrderStatusInQ" /> -->
 			<camel:to
 				uri="bean:endpointLogger?method=logEvent(*,*,*,'RuntimeException occurred',true)" />
+
 			<camel:setHeader headerName="TransactionStatus">
-				<camel:simple>FAILED</camel:simple>
+				<camel:simple>ERROR</camel:simple>
 			</camel:setHeader>
 			<camel:to uri="bean:auditProcessor?method=process" />
+
 		</camel:onException>
-    
-   <!-- Route definition to send the messaegs to Elastic search -->
+
+		<!-- Route definition to send the messaegs to Elastic search -->
 		<camel:route id="MCOM_AIA_SIEBEL">
 			<camel:from uri="ref:mcomOrderStatusInQ" />
 
-			<camel:setHeader headerName="ConsumerId">
-				<camel:simple>${properties:sonic.mcom.q.username}</camel:simple>
-			</camel:setHeader>
-			<camel:setHeader headerName="OrderProgress">
-				<camel:simple>${properties:sonic.mcom.q.actionName}</camel:simple>
-			</camel:setHeader>
-			<camel:setHeader headerName="EventDataOrderProgress">
-				<camel:simple>${properties:sonic.mcom.q.subActionName}</camel:simple>
-			</camel:setHeader>
-			<camel:setHeader headerName="MessageStartTime">
+			<camel:setProperty propertyName="JMSCorrelationID">
+				<camel:simple>${header.JMSCorrelationID}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="MessageStartTime">
 				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
-			</camel:setHeader>
-			<camel:setHeader headerName="EnvironmentName">
+			</camel:setProperty>
+			<camel:setProperty propertyName="EnvironmentName">
 				<camel:simple>${properties:env.name}</camel:simple>
-			</camel:setHeader>
-			<camel:setHeader headerName="MessageOriginSystem">
-				<camel:simple>${properties:sonic.mcom.q.name}</camel:simple>
-			</camel:setHeader>
-			<camel:setHeader headerName="MessageDestinationSystem">
-				<camel:simple>${properties:oracle.aq.name}</camel:simple>
-			</camel:setHeader>
+			</camel:setProperty>
+			<camel:setProperty propertyName="ConsumerId">
+				<camel:simple>${properties:sonic.mcom.q.consumerId}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="endUserId">
+				<camel:simple>${properties:sonic.mcom.q.username}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="ActionName">
+				<camel:simple>${properties:sonic.mcom.q.actionName}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="SubActionName">
+				<camel:simple>${properties:sonic.mcom.q.subActionName}</camel:simple>
+			</camel:setProperty>
 
-			<camel:to
-				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed Order Status Notification from AIA to SIEBEL Format',true)" />
 			<camel:to
 				uri="bean:endpointLogger?method=logEvent(*,*,*,'Received Order Status Notification from MCOM at AIA',true)" />
 			<camel:to uri="bean:logAudit?method=process" />
@@ -83,20 +83,22 @@
 			<camel:to
 				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed Order Status Notification from MCOM to AIA Format',true)" />
 			<camel:to uri="bean:logAudit?method=process" />
-			
-			<camel:to uri="xslt://AIAXslts/Transform_McomTOSiebel_1.xsl?transformerFactoryClass=net.sf.saxon.TransformerFactoryImpl" />
-			<camel:to uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed Order Status Notification from AIA to SIEBEL Format',true)" />
+
+			<camel:to
+				uri="xslt://AIAXslts/Transform_McomTOSiebel_1.xsl?transformerFactoryClass=net.sf.saxon.TransformerFactoryImpl" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transformed Order Status Notification from AIA to SIEBEL Format',true)" />
 			<camel:to uri="bean:logAudit?method=process" />
-			
+
 			<camel:to uri="ref:oracleDestinationAQ" />
-			
-			<camel:setHeader headerName="MessageEndTime">
+
+			<camel:setProperty propertyName="MessageEndTime">
 				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
-			</camel:setHeader>
-			<camel:setHeader headerName="TransactionStatus">
+			</camel:setProperty>
+			<camel:setProperty propertyName="TransactionStatus">
 				<camel:simple>SUCCESS</camel:simple>
-			</camel:setHeader>
-			
+			</camel:setProperty>
+
 			<camel:to uri="bean:auditProcessor?method=process" />
 
 		</camel:route>
@@ -104,15 +106,34 @@
 		<!-- HTTP Service Routes below -->
 		<camel:route id="AIAHttpRoute" streamCache="true">
 			<camel:from uri="cxf:bean:soapHttpESBEndpoint" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Received CustomerConsultation request at AIA',true)" />
+			<camel:setProperty propertyName="MessageStartTime">
+				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="EnvironmentName">
+				<camel:simple>${properties:env.name}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="ActionName">
+				<camel:simple>${properties:httpcustomerconsultation.actionName}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="SubActionName">
+				<camel:simple>${properties:httpcustomerconsultation.subActionName}</camel:simple>
+			</camel:setProperty>
+
+			<!-- <camel:setHeader headerName="MessageDestinationSystem"> <camel:simple>${httpcustomerconsultation.destinationName}</camel:simple>
+				</camel:setHeader> -->
 			<camel:to uri="bean:filterSoapBodyFromRequest?method=filterESBSoap" />
 			<camel:to
 				uri="xslt://AIAXslts/CustomerConsultation-Http/xform_GetCustomerMigrationStatusABM_to_QueryCustomerPartyEBM_1.xsl" />
-			<camel:to	uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Request from ESB into AIA internal Request message.',true)" />
-      <camel:to
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Request from ESB into AIA internal Request message.',true)" />
+			<camel:to
 				uri="xslt://AIAXslts/CustomerConsultation-Http/Transform_QueryCustomerPartyEBM_to_CustomerConsulatationSHEInput_2.xsl" />
-			<camel:to	uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Request from AIA into SIEBEL Request message.',true)" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Request from AIA into SIEBEL Request message.',true)" />
 			<camel:to uri="bean:filterSoapBodyFromRequest?method=padSHESoapEnvelop" />
-			<camel:to uri="log:${body}" />
+			<!-- <camel:to uri="log:${body}" /> -->
 			<camel:setHeader headerName="SOAPAction">
 				<camel:constant>"document/http://siebel.com/CustomUI:BGCCustomerConsultationgetCustomerMigrationStatus_2"</camel:constant>
 			</camel:setHeader>
@@ -123,24 +144,37 @@
 				<camel:constant>http://siebel.com/CustomUI</camel:constant>
 			</camel:setHeader>
 			<camel:to uri="cxf:bean:soapHttpSiebelEndpoint" />
-			<camel:log message="SHE Response: ${body} >>>>>>>>>>" />
+			<!-- <camel:log message="SHE Response: ${body} >>>>>>>>>>" /> -->
 			<camel:to uri="bean:filterSoapBodyFromRequest?method=filterSHESoap" />
 			<camel:choice>
 				<camel:when>
 					<camel:simple>${header.SOAPError} != 'FunctionalError' and ${header.SOAPError} != 'TechnicalError'</camel:simple>
 					<camel:to
 						uri="xslt://AIAXslts/CustomerConsultation-Http/Transform_CustomerConsultationOutput_to_QueryCustomerPartyEBM_3.xsl" />
-					<camel:to
-						uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Response from SHE into AIA internal Response message.',true)" />
-
+					<!-- <camel:to
+						uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Response from SHE into AIA internal Response message.',true)" /> -->
 					<camel:to
 						uri="xslt://AIAXslts/CustomerConsultation-Http/xform_QueryCustomerPartyResponseEBM_to_GetCustomerMigrationStatusRespABM_4.xsl" />
-					<camel:to
-						uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Response from AIA into ESB Response message.',true)" />
+					<!-- <camel:to
+						uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Response from AIA into ESB Response message.',true)" /> -->
 				</camel:when>
 			</camel:choice>
+
+			<camel:setProperty propertyName="MessageEndTime">
+				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
+			</camel:setProperty>
 			<camel:to uri="bean:filterSoapBodyFromRequest?method=padESBSoapEnvelop" />
-			<camel:convertBodyTo type="java.lang.String" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Response for CustomerConsultation request at AIA',true)" />
+			<camel:multicast>
+				<!-- <camel:convertBodyTo type="java.lang.String" /> -->
+				<camel:to uri="bean:auditProcessor?method=process" />
+			</camel:multicast>
+			<!-- <camel:to uri="bean:filterSoapBodyFromRequest?method=padESBSoapEnvelop"
+				/> <camel:convertBodyTo type="java.lang.String" /> <camel:setProperty propertyName="MessageEndTime">
+				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple> </camel:setProperty>
+				<camel:to uri="bean:auditProcessor?method=process" /> -->
+
 		</camel:route>
 	</camel:camelContext>
 
@@ -189,8 +223,8 @@
 	<bean id="jmsConnectionFactory" class="org.springframework.jndi.JndiObjectFactoryBean">
 		<property name="jndiTemplate" ref="jndiTemplate" />
 		<!-- Use property below -->
-		<property name="jndiName" value="${sonic.mcom.conection-factory.name}" /> 
-    <!-- the connection factory object is store under this name -->
+		<property name="jndiName" value="${sonic.mcom.conection-factory.name}" />
+		<!-- the connection factory object is store under this name -->
 	</bean>
 
 
@@ -208,20 +242,21 @@
 		</property>
 	</bean>
 
-        <bean id="auditProcessor" class="com.proximus.bootcamel.she.camelmiddleware.processes.AuditProcessor" />
-	<!-- Define Sonic bean as a JMSComponent to be used by Camel Context, otherwise 
+	<bean id="auditProcessor"
+		class="com.proximus.bootcamel.she.camelmiddleware.processes.AuditProcessor" />
+	<!-- Define Sonic bean as a JMSComponent to be used by Camel Context, otherwise
 		Camel Context does not know about how to connect to Sonic -->
 	<bean id="sonic" class="org.apache.camel.component.jms.JmsComponent">
 		<property name="configuration" ref="jmsConfig" />
 	</bean>
 
-	<!-- End point to retrieve the Order status notification from MCOM at AIA 
+	<!-- End point to retrieve the Order status notification from MCOM at AIA
 		Side, configure the below as a property -->
 	<camel:endpoint id="mcomOrderStatusInQ"
 		uri="sonic:queue:${sonic.mcom.q.name}?username=${sonic.mcom.q.username}&amp;password=${sonic.mcom.q.password}&amp;asyncConsumer=true" />
 	<!-- Define Camel Routes Below -->
 
-	<!-- oracleDestinationAQ is the End point for Oracle AQ, the destination 
+	<!-- oracleDestinationAQ is the End point for Oracle AQ, the destination
 		Q -->
 	<camel:endpoint id="oracleDestinationAQ"
 		uri="aq:queue:${oracle.aq.name}?jmsMessageType=${oracle.message.type}" />
@@ -233,7 +268,7 @@
 	<cxf:cxfEndpoint id="soapHttpESBEndpoint"
 		serviceClass="bgc.services.aia.customerconsultation.v1.CustomerConsultationPortType"
 		wsdlURL="/wsdl/CustomerConsultationAIA/AIA-SVC-CustomerConsultation-1.0-standard-http_binding.wsdl"
-		address="http://localhost:8003/AIA-SVC-CustomerConsultation">
+		address="${httpcustomerconsultation.soapHttpESBEndpoint}">
 		<cxf:properties>
 			<entry key="dataFormat" value="MESSAGE" />
 		</cxf:properties>
@@ -243,7 +278,7 @@
 	<cxf:cxfEndpoint id="soapHttpSiebelEndpoint"
 		serviceClass="com.siebel.customui.BGCSpcMCHSpcCustomerSpcConsultation"
 		wsdlURL="/wsdl/CustomerConsultationSHE/SHE.wsdl"
-		address="http://ozoi6102.bc:8930/eai_anon_enu/start.swe?SWEExtSource=AnonWebService&amp;SWEExtCmd=Execute">
+		address="${httpcustomerconsultation.soapHttpSiebelEndpoint}">
 		<cxf:properties>
 			<entry key="dataFormat" value="MESSAGE" />
 		</cxf:properties>

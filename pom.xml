@@ -32,7 +32,9 @@
         </properties>
 
 	<dependencies>
-		<!-- <dependency>
+		<!--Exception in thread "pool-2-thread-1" java.lang.NoClassDefFoundError: org/apache/http/HttpEntity -->
+
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.4</version>
@@ -41,7 +43,7 @@
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.3.4</version>
-		</dependency> -->
+		</dependency>
 
 
 		<dependency>
@@ -113,7 +115,7 @@
 			<artifactId>camel-cxf</artifactId>
 			<version>${version.camel}</version>
 		</dependency>
-		
+
     <dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-groovy</artifactId>
@@ -204,7 +206,7 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.apache.servicemix.bundles/org.apache.servicemix.bundles.saxon -->
-		<!-- required to overcome "The first argument to the non-static Java function 
+		<!-- required to overcome "The first argument to the non-static Java function
 			'formatDateTime' is not a valid object reference." -->
 		<dependency>
 			<groupId>org.apache.servicemix.bundles</groupId>
