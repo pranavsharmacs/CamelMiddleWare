@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:v1.requestcheckcreditworthiness.bps.objects.bgc" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:v1.requestcheckcreditworthiness.bps.objects.bgc" version="1.0">
+	<!--=========================================================================
+@BEIM4SOA BEIM4SOA_V3.52.xsd
+
+* File Name      		: BPS-OBJ-RequestCheckCreditWorthiness-1.0.xsd
+*
+* Author         		: Seenivasan MUTHIAH
+* Owner          		: Wilfried GIJS
+* Bgc analyst    		: Seenivasan MUTHIAH
+* Creation date  	    : 13-10-2015
+* Description    		: This service will be used for checking the financial background of the customer
+* Status        		: DRAFT
+*
+* History
+*   Seenivasan MUTHIAH	13-10-2015	1.0	Initial version
+=========================================================================-->
+	<xs:complexType name="CityIdentifierType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="id" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+			<xs:element minOccurs="0" name="idContext" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : CityType ******
+A large and populated urban area which contains an administrative district.
+City is further specified in MainCity and Suburb.
+<em>@Acronym
+ZIP Zone Improvement Plan</em>-->
+	<xs:complexType name="CityType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="identifier" type="tns:CityIdentifierType"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="relatedCity" type="tns:CityType"/>
+			<!-- - - - Element : ZIPCode - - -
+@Acronym ZIP ZoneImprovementPlan-->
+			<xs:element minOccurs="0" name="ZIPCode" type="tns:CodeValueType"/>
+			<!-- - - - Element : name - - -
+Official city name in the requested language, or, if it does not exist in the requested language, in the language with the highest priority-->
+			<xs:element minOccurs="0" name="name" type="tns:NameType"/>
+			<!-- - - - Element : NISCode - - -
+@Acronym NIS NationalInstituteStatistics-->
+			<xs:element minOccurs="0" name="NISCode" type="tns:CodeValueType"/>
+			<!-- - - - Element : languageRegime - - -
+The language regime of the city based on the location of the city.
+eg. Bruges located in Flanders is Dutch, Liege in Wallonia is French.-->
+			<xs:element minOccurs="0" name="languageRegime" type="tns:CodeValueType"/>
+			<!-- - - - Element : type - - -
+A classification of the type of city:
+MainCity: A large populated urban area which contains an administrative district. Synonyms used are: gemeente/commune, stad/ville
+example: Leuven
+Suburb: A bounded locality within a city
+Synonyms used are: deelgemeente.
+example: Kessel-Lo (als deelgemeente van Leuven)-->
+			<xs:element minOccurs="0" name="type" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : CodeValueType ******
+A code value is exactly one symbol in a coding system. This is also known as reference data.
+The value is implemented in a specific context (eg. application)
+A single CodeValue type can have different implemented values over different contexts.
+The master list of values is defined in the context "BEIM" whereas alternate values can be defined in an application specific context.
+example: use of CV type for LanguageType as reference data.
+- standard reference data values (context = "BEIM") defined for LanguageType are: NL,FR,EN,DE
+- assume LanguageType implemented in application XYZ: 1,2,3,4
+- assume LanguageType implemented in application ABC: NL,FR,EN,DE
+CV would be used as follows:
+codeSystem: LanguageType
+codeSystemVersion 1.0
+codeDescr "classification of languages"
+value: "NL"
+context: "BEIM"
+- - or - -
+codeSystem: LanguageType
+codeSystemVersion 1.0
+codeDescr "classification of languages"
+value: "1"
+context: "XYZ"-->
+	<xs:complexType name="CodeValueType">
+		<xs:sequence>
+			<!-- - - - Element : codeSystem - - -
+the business level coding or classification scheme used to classify the value.
+example: "CountryCode"
+
+    name of the code system (aka domain) in which the value is defined.
+    eg. CountryCode-->
+			<xs:element minOccurs="0" name="codeSystem" type="xs:string"/>
+			<!-- - - - Element : codeSystemVersion - - -
+the version of the classification scheme.
+This is used in case of international standard classification schemes;
+eg. v 1.0
+version of the code system eg. v1.2-->
+			<xs:element minOccurs="0" name="codeSystemVersion" type="xs:string"/>
+			<!-- - - - Element : codeDescription - - -
+a description of the coding system.
+example: "ISO 3 country code - international system to classify countries."
+
+    textual description in English of the code system.
+    eg. list of country codes based on ISO 3166-1 alpha-3 standards.-->
+			<xs:element minOccurs="0" name="codeDescription" type="xs:string"/>
+			<!-- - - - Element : value - - -
+the concrete value within the classification system.
+eg. "Bel" as country within the Iso3CountryCode
+
+    the concrete value
+    eg. "BEL" (as country code for Belgium)-->
+			<xs:element name="value" type="xs:string"/>
+			<!-- - - - Element : context - - -
+The context in which the value is defined. This could be an application eg. CDB, OMS, etc... or business oriented. eg. ISO3 for a codesystem CountryCode.
+context = "BEIM" is to be used for Belgacom master list.
+The context "BGCMASTER" indicates the master value.
+
+    the context in which the value is to be interpreted.
+    Default this will be "BEIM" as the standard context. Alternately this could be a application specific (eg. OMS, PNI,
+    etc...) in case that an application applies its own specific list of values.-->
+			<xs:element minOccurs="0" name="context" type="xs:string"/>
+			<!-- - - - Element : valueDescription - - -
+textual description of the value.
+    eg. Belgium-->
+			<xs:element minOccurs="0" name="valueDescription" type="tns:NameType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CountryCodeISOAlpha2Type">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="alpha2Code" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CountryCodeISOAlpha3Type">
+		<xs:sequence>
+			<xs:element name="alpha3Code" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : CountryType ******
+A tract of land, a region, the territory of an independent nation.
+example: Belgium, United States of America, Monaco,...-->
+	<xs:complexType name="CountryType">
+		<xs:sequence>
+			<!-- - - - Element : name - - -
+Official country name in the requested language or if it does not exist in the requested language, in the language with the highest priority.-->
+			<xs:element name="name" type="tns:NameType"/>
+			<!-- - - - Element : codeISO3 - - -
+@Acronym ISO3 ISO3-->
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="codeISO3" type="tns:CountryCodeISOAlpha3Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CustomerIdentifierType">
+		<xs:sequence>
+			<xs:element name="id" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+			<xs:element minOccurs="0" name="idContext" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : IntervalType ******
+Generic datatype that can express a range or interval of values. An interval is a set
+of consecutive values of any totally ordered datatype. An interval is thus a
+continuous subset of its base datatype.-->
+	<xs:complexType name="IntervalType">
+		<xs:sequence>
+			<xs:element name="low" type="xs:string"/>
+			<xs:element name="high" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : LabelType ******
+A generic purpose language specific text label.-->
+	<xs:complexType name="LabelType">
+		<xs:sequence>
+			<!-- - - - Element : text - - -
+the text content of the label-->
+			<xs:element name="text" type="xs:string"/>
+			<!-- - - - Element : language - - -
+the language in which the label text is defined.-->
+			<xs:element name="language" type="tns:LanguageCodeISOAlpha2Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LanguageCodeISOAlpha2Type">
+		<xs:sequence>
+			<xs:element name="alpha2Code" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : NameType ******
+Custom dataType used to provide a meaningfull name to a business concept.
+    Types and examples:
+    - type: { print name | display name | official
+    name | document name | etc...} when names are used for persons
+    - langName: language specific name
+    Comments:
+    A concept name has 2 dimensions:
+    - Language: in which the name is specified (LanguageISO2Code)
+    - Name type:-->
+	<xs:complexType name="NameType">
+		<xs:sequence>
+			<!-- - - - Element : defaultName - - -
+the default name value in the default language.
+the default name value in the default language-->
+			<xs:element name="defaultName" type="xs:string"/>
+			<!-- - - - Element : type - - -
+Classfiiation of the name type based on its use.
+Classification of the name type based on its use-->
+			<xs:element minOccurs="0" name="type" type="tns:CodeValueType"/>
+			<!-- - - - Element : languageName - - -
+the name provided in a specific language
+the name provided in a specific language-->
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="languageName" type="tns:LabelType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : PersonNameType ******
+A word, term, or phrase by which a person is known and distinguished from other persons.-->
+	<xs:complexType name="PersonNameType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="firstName" type="xs:string"/>
+			<xs:element minOccurs="0" name="lastName" type="xs:string"/>
+			<xs:element minOccurs="0" name="middleName" type="xs:string"/>
+			<xs:element minOccurs="0" name="legalName" type="xs:string"/>
+			<!-- - - - Element : printName - - -
+a type of name which is used/printed on paper invoices if
+    the combined length of (last)name and firstName exceeds 26 characters. Restriction due to the limitation of the
+    "envelope window".-->
+			<xs:element minOccurs="0" name="printName" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : PersonType ******
+An individual of interest to the Belgacom Group.-->
+	<xs:complexType name="PersonType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="birthDate" type="xs:dateTime"/>
+			<xs:element minOccurs="0" name="name" type="tns:PersonNameType"/>
+			<!-- - - - Element : legalAddress - - -
+@HybridElementDerivedFrom legalAddressIdentifier tns:ChoiceAddressIdentifierInPartyType-->
+			<xs:element minOccurs="0" name="legalAddress" type="tns:ChoiceAddressInPartyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StreetIdentifierType">
+		<xs:sequence>
+			<xs:element name="id" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+			<xs:element minOccurs="0" name="idContext" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : StreetType ******
+A thoroughfare in a city or village, bordered by dwellings or business houses..
+example: Koning Albert II laan-->
+	<xs:complexType name="StreetType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="identifier" type="tns:StreetIdentifierType"/>
+			<!-- - - - Element : name - - -
+Official streetname in the requested language or, if it does not exist in the requested language, in the language with the highest priority
+Following types of street names are defined: (via the nameType CV)
+Official name
+Print name-->
+			<xs:element minOccurs="0" name="name" type="tns:NameType"/>
+			<xs:element minOccurs="0" name="languageRegime" type="tns:LanguageCodeISOAlpha2Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : TimeIntervalType ******
+Defines a period (range) in time specified by a start and end date.-->
+	<xs:complexType name="TimeIntervalType">
+		<xs:sequence>
+			<xs:element name="startTimeStamp" type="xs:dateTime"/>
+			<xs:element name="endTimeStamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UrbanAddressCharValType">
+		<xs:sequence>
+			<!-- - - - Element : keyName - - -
+keyName used to attach a Characteristic to a Concept.-->
+			<xs:element name="keyName" type="xs:string"/>
+			<xs:element name="value" type="xs:string"/>
+			<xs:element name="valueRange" type="tns:IntervalType"/>
+			<xs:element name="validFor" type="tns:TimeIntervalType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UrbanAddressIdentifierType">
+		<xs:sequence>
+			<xs:element name="id" type="xs:string"/>
+			<!-- - - - Element : mainKey - - -
+deprecated attribute - use id instead-->
+			<xs:element name="mainKey" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+			<!-- - - - Element : idContext - - -
+<strong>@MdrCvUrl</strong>
+    http://shpworkgroup.bgc.net/sites/WW10000046/metadata/_layouts/xlviewer.aspx?id=/sites/WW10000046/metadata/reference%20data%20lists/UrbanAddressIdentifier.idContext.xlsx&amp;Source=http%3A%2F%2Fshpworkgroup%2Ebgc%2Enet%2Fsites%2FWW10000046%2Fmetadata%2Freference?data?lists%2FForms%2FAllItems%2Easpx%3FPaged%3DTRUE%26p%5FSortBehavior%3D0%26p%5FFileLeafRef%3DTask%252etype%252exlsx%26p%5FID%3D36%26PageFirstRow%3D121%26%26View%3D%7BA72B6D19%2DEBB1%2D4354%2DA526%2D103D0941590B%7D&amp;DefaultItemOpen=1-->
+			<xs:element minOccurs="0" name="idContext" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : UrbanAddressType ******
+A structured textual way describing a place in an urban area. It is defined at the level of house number.
+Could also be a range of house numbers in case that different adjacent UrbanAddresses have been merged together.
+    Types and examples:
+    - 2 adjacent houses which have been merged: Kerkstraat 3-4, 8000 Brugge, Belgium
+    - a place located at Lambert coordinates X:335 Y:837
+    - a place located at K. Albert II laan 27,1030 Brussels , Belgium.
+    Comments:
+    It is validated by AGS.-->
+	<xs:complexType name="UrbanAddressType">
+		<xs:sequence>
+			<!-- - - - Element : houseNumberFirst - - -
+The official house number for this address-->
+			<xs:element minOccurs="0" name="houseNumberFirst" type="xs:string"/>
+			<!-- - - - Element : houseNumberFirstSuffix - - -
+The alphanumeric part of the first house number.-->
+			<xs:element minOccurs="0" name="houseNumberFirstSuffix" type="xs:string"/>
+			<!-- - - - Element : houseNumberLast - - -
+If there is a last house number for the address available.  In case of a merger of buildings.  (example : nr. 6-8)-->
+			<xs:element minOccurs="0" name="houseNumberLast" type="xs:string"/>
+			<!-- - - - Element : houseNumberLastSuffix - - -
+The alphanumeric part of the last house number.-->
+			<xs:element minOccurs="0" name="houseNumberLastSuffix" type="xs:string"/>
+			<xs:element minOccurs="0" name="identifier" type="tns:UrbanAddressIdentifierType"/>
+			<xs:element minOccurs="0" name="country" type="tns:CountryType"/>
+			<xs:element minOccurs="0" name="city" type="tns:CityType"/>
+			<xs:element minOccurs="0" name="street" type="tns:StreetType"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="urbanSubAddress" type="tns:UrbanSubAddressType"/>
+			<!-- - - - Element : ZIPCode - - -
+@Acronym ZIP ZoneImprovementPlan-->
+			<xs:element minOccurs="0" name="ZIPCode" type="tns:CodeValueType"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="charVal" type="tns:UrbanAddressCharValType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UrbanSubAddressCharValType">
+		<xs:sequence>
+			<!-- - - - Element : keyName - - -
+keyName used to attach a Charateristic to a Concept.-->
+			<xs:element name="keyName" type="xs:string"/>
+			<xs:element name="value" type="xs:string"/>
+			<xs:element name="valueRange" type="tns:IntervalType"/>
+			<xs:element name="validFor" type="tns:TimeIntervalType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UrbanSubAddressIdentifierType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="id" type="xs:string"/>
+			<!-- - - - Element : mainKey - - -
+deprecated attribute - use id instead-->
+			<xs:element minOccurs="0" name="mainKey" type="xs:string"/>
+			<!-- - - - Element : subKey - - -
+deprecated attribute - use id instead-->
+			<xs:element name="subKey" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+			<!-- - - - Element : idContext - - -
+<strong>@MdrCvUrl</strong>
+http://shpworkgroup.bgc.net/sites/WW10000046/metadata/_layouts/xlviewer.aspx?id=/sites/WW10000046/metadata/reference%20data%20lists/UrbanSubAddressIdentifier.idContext.xlsx&amp;Source=http%3A%2F%2Fshpworkgroup%2Ebgc%2Enet%2Fsites%2FWW10000046%2Fmetadata%2Freference?data?lists%2FForms%2FAllItems%2Easpx%3FPaged%3DTRUE%26p%5FSortBehavior%3D0%26p%5FFileLeafRef%3DTask%252etype%252exlsx%26p%5FID%3D36%26PageFirstRow%3D121%26%26View%3D%7BA72B6D19%2DEBB1%2D4354%2DA526%2D103D0941590B%7D&amp;DefaultItemOpen=1-->
+			<xs:element minOccurs="0" name="idContext" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : UrbanSubAddressType ******
+A subdivision within an UrbanAddress at room level.
+It is specified by a combination of a block number and/or floor number and/or apartment number and/or box number.
+example: a telecom access room within a shopping mall at the fourth floor.-->
+	<xs:complexType name="UrbanSubAddressType">
+		<xs:sequence>
+			<!-- - - - Element : houseNumberFirst - - -
+The official house number for this address-->
+			<xs:element minOccurs="0" name="houseNumberFirst" type="xs:string"/>
+			<!-- - - - Element : houseNumberLastSuffix - - -
+The alphanumeric part of the last house number.-->
+			<xs:element minOccurs="0" name="houseNumberLastSuffix" type="xs:string"/>
+			<!-- - - - Element : houseNumberLast - - -
+If there is a last house number for the address available.  In case of a merger of buildings.  (example : nr. 6-8)-->
+			<xs:element minOccurs="0" name="houseNumberLast" type="xs:string"/>
+			<!-- - - - Element : houseNumberFirstSuffix - - -
+The alphanumeric part of the first house number.-->
+			<xs:element minOccurs="0" name="houseNumberFirstSuffix" type="xs:string"/>
+			<!-- - - - Element : blockNumber - - -
+The blocknumber of the subaddress.  Optional, but at least one of blockNr, floorNr, appartmentNr, boxNr should be filled in.-->
+			<xs:element minOccurs="0" name="blockNumber" type="xs:string"/>
+			<!-- - - - Element : floorNumber - - -
+The floornumber of the subaddress.  Optional, but at least one of blockNr, floorNr, appartmentNr, boxNr should be filled in.-->
+			<xs:element minOccurs="0" name="floorNumber" type="xs:string"/>
+			<!-- - - - Element : apartmentNumber - - -
+The appartmentnumber of the subaddress.  Optional, but at least one of blockNr, floorNr, appartmentNr, boxNr should be filled in.-->
+			<xs:element minOccurs="0" name="apartmentNumber" type="xs:string"/>
+			<!-- - - - Element : boxNumber - - -
+The boxnumber of the subaddress.  Optional, but at least one of blockNr, floorNr, appartmentNr, boxNr should be filled in.-->
+			<xs:element minOccurs="0" name="boxNumber" type="xs:string"/>
+			<xs:element minOccurs="0" name="identifier" type="tns:UrbanSubAddressIdentifierType"/>
+			<xs:element minOccurs="0" name="street" type="tns:StreetType"/>
+			<xs:element minOccurs="0" name="city" type="tns:CityType"/>
+			<xs:element minOccurs="0" name="country" type="tns:CountryType"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="charVal" type="tns:UrbanSubAddressCharValType"/>
+			<!-- - - - Element : ZIPCode - - -
+@Acronym ZIP ZoneImprovementPlan-->
+			<xs:element minOccurs="0" name="ZIPCode" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : VATNumberType ******
+VAT number existing of ISO2 country prefix + VAT number
+example BE 123.736.383-->
+	<xs:complexType name="VATNumberType">
+		<xs:sequence>
+			<!-- - - - Element : VATNumber - - -
+@Acronym VAT ValueAddedTaxe-->
+			<xs:element name="VATNumber" type="xs:string"/>
+			<!-- - - - Element : countryCode - - -
+country code in 2 char's to be applied for the VAT code.
+example BE for Belgium-->
+			<xs:element minOccurs="0" name="countryCode" type="tns:CountryCodeISOAlpha2Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : ChoiceAddressInPartyType ******
+@HybridComplexTypeDerivedFrom ChoiceAddressIdentifierInPartyType-->
+	<xs:complexType name="ChoiceAddressInPartyType">
+		<xs:choice>
+			<!-- - - - Element : urbanSubAddress - - -
+@HybridElementDerivedFrom urbanSubAddressIdentifier tns:UrbanSubAddressIdentifierType-->
+			<xs:element minOccurs="0" name="urbanSubAddress" type="tns:UrbanSubAddressType"/>
+			<!-- - - - Element : urbanAddress - - -
+@HybridElementDerivedFrom urbanAddressIdentifier tns:UrbanAddressIdentifierType-->
+			<xs:element minOccurs="0" name="urbanAddress" type="tns:UrbanAddressType"/>
+		</xs:choice>
+	</xs:complexType>
+</xs:schema>

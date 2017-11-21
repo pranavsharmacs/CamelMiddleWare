@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by SDE/SDV/ITE
+	(Belgacom) -->
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wstns="urn:v1.financialbackgroundchecking.bps.services.bgc"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:stdctx="urn:v4.context.vss.objects.bgc" name="BPS-FinancialBackgroundChecking-1.0-standard"
+	targetNamespace="urn:v1.financialbackgroundchecking.bps.services.bgc">
+	<wsdl:import namespace="urn:v1.financialbackgroundchecking.bps.services.bgc"
+		location="http://ssr.web.bc/repository/BPS/SVC/FinancialBackgroundChecking/1.0/BPS-SVC-FinancialBackgroundChecking-1.0-standard-def.wsdl" />
+	<wsdl:types>
+		<xsd:schema targetNamespace="urn:v1.financialbackgroundchecking.bps.services.bgc"
+			elementFormDefault="qualified" attributeFormDefault="unqualified">
+			<xsd:import namespace="urn:v4.context.vss.objects.bgc"
+				schemaLocation="http://ssr.web.bc/repository/VSS/OBJ/Context/4.0/VSS-OBJ-Context-4.0.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="VSSContextMessage">
+		<wsdl:part name="Context" element="stdctx:Context" />
+	</wsdl:message>
+	<wsdl:binding name="FinancialBackgroundCheckingSOAPBinding"
+		type="wstns:FinancialBackgroundCheckingPortType">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="CheckCreditworthiness">
+			<soap:operation soapAction="CheckCreditworthiness"
+				style="document" />
+			<wsdl:input name="CheckCreditworthinessInput">
+				<soap:body use="literal" />
+				<soap:header message="wstns:VSSContextMessage" part="Context"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output name="CheckCreditworthinessOutput">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="TechnicalFault">
+				<soap:fault name="TechnicalFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="FunctionalFault">
+				<soap:fault name="FunctionalFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+		<wsdl:operation name="CheckService">
+			<soap:operation soapAction="CheckService" style="document" />
+			<wsdl:input name="CheckServiceInput">
+				<soap:body use="literal" />
+				<soap:header message="wstns:VSSContextMessage" part="Context"
+					use="literal" />
+			</wsdl:input>
+			<wsdl:output name="CheckServiceOutput">
+				<soap:body use="literal" />
+			</wsdl:output>
+			<wsdl:fault name="TechnicalFault">
+				<soap:fault name="TechnicalFault" use="literal" />
+			</wsdl:fault>
+			<wsdl:fault name="FunctionalFault">
+				<soap:fault name="FunctionalFault" use="literal" />
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="BPS-FinancialBackgroundChecking-1.0-Service">
+		<wsdl:port name="BPS-FinancialBackgroundChecking-1.0-SOAP-Port"
+			binding="wstns:FinancialBackgroundCheckingSOAPBinding">
+			<soap:address
+				location="http://soassga.bc:10000/SSG/services/BelgacomStandardRouter/bgc.services.bps.financialbackgroundchecking.v1" />
+		</wsdl:port>
+	</wsdl:service>
+	<!-- ================================================== -->
+	<!-- Messages -->
+	<!-- ================================================== -->
+	<!-- ================================================== -->
+	<!-- SOAP Binding -->
+	<!-- ================================================== -->
+	<!-- ================================================== -->
+	<!-- Service -->
+	<!-- ================================================== -->
+</wsdl:definitions>

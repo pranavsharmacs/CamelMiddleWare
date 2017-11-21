@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn:v1.responsecheckcreditworthiness.bps.objects.bgc" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:v1.responsecheckcreditworthiness.bps.objects.bgc" version="1.0">
+	<!--=========================================================================
+@BEIM4SOA BEIM4SOA_V3.52.xsd
+
+* File Name      		: BPS-OBJ-ResponseCheckCreditWorthiness-1.0.xsd
+*
+* Author         		: Seenivasan MUTHIAH
+* Owner          		: Wilfried GIJS
+* Bgc analyst    		: Seenivasan MUTHIAH
+* Creation date  	    : 13-10-2015
+* Description    		: This service will be used for checking the financial background of the customer
+* Status        		: DRAFT
+*
+* History
+*   Seenivasan MUTHIAH	13-10-2015	1.0	Initial version
+=========================================================================-->
+	<!-- ****** ComplexType : CodeValueType ******
+A code value is exactly one symbol in a coding system. This is also known as reference data.
+The value is implemented in a specific context (eg. application)
+A single CodeValue type can have different implemented values over different contexts.
+The master list of values is defined in the context "BEIM" whereas alternate values can be defined in an application specific context.
+example: use of CV type for LanguageType as reference data.
+- standard reference data values (context = "BEIM") defined for LanguageType are: NL,FR,EN,DE
+- assume LanguageType implemented in application XYZ: 1,2,3,4
+- assume LanguageType implemented in application ABC: NL,FR,EN,DE
+CV would be used as follows:
+codeSystem: LanguageType
+codeSystemVersion 1.0
+codeDescr "classification of languages"
+value: "NL"
+context: "BEIM"
+- - or - -
+codeSystem: LanguageType
+codeSystemVersion 1.0
+codeDescr "classification of languages"
+value: "1"
+context: "XYZ"-->
+	<xs:complexType name="CodeValueType">
+		<xs:sequence>
+			<!-- - - - Element : codeSystem - - -
+the business level coding or classification scheme used to classify the value.
+example: "CountryCode"
+
+    name of the code system (aka domain) in which the value is defined.
+    eg. CountryCode-->
+			<xs:element minOccurs="0" name="codeSystem" type="xs:string"/>
+			<!-- - - - Element : codeSystemVersion - - -
+the version of the classification scheme.
+This is used in case of international standard classification schemes;
+eg. v 1.0
+version of the code system eg. v1.2-->
+			<xs:element minOccurs="0" name="codeSystemVersion" type="xs:string"/>
+			<!-- - - - Element : codeDescription - - -
+a description of the coding system.
+example: "ISO 3 country code - international system to classify countries."
+
+    textual description in English of the code system.
+    eg. list of country codes based on ISO 3166-1 alpha-3 standards.-->
+			<xs:element minOccurs="0" name="codeDescription" type="xs:string"/>
+			<!-- - - - Element : value - - -
+the concrete value within the classification system.
+eg. "Bel" as country within the Iso3CountryCode
+
+    the concrete value
+    eg. "BEL" (as country code for Belgium)-->
+			<xs:element minOccurs="0" name="value" type="xs:string"/>
+			<!-- - - - Element : context - - -
+The context in which the value is defined. This could be an application eg. CDB, OMS, etc... or business oriented. eg. ISO3 for a codesystem CountryCode.
+context = "BEIM" is to be used for Belgacom master list.
+The context "BGCMASTER" indicates the master value.
+
+    the context in which the value is to be interpreted.
+    Default this will be "BEIM" as the standard context. Alternately this could be a application specific (eg. OMS, PNI,
+    etc...) in case that an application applies its own specific list of values.-->
+			<xs:element minOccurs="0" name="context" type="xs:string"/>
+			<!-- - - - Element : valueDescription - - -
+textual description of the value.
+    eg. Belgium-->
+			<xs:element minOccurs="0" name="valueDescription" type="tns:NameType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : CustomerCharValType ******
+This is to be used to map data elements which  do not belong to a spec/char pattern because they are very specific, or application specific-->
+	<xs:complexType name="CustomerCharValType">
+		<xs:sequence>
+			<!-- - - - Element : name - - -
+keyName used to attach a Charateristic to a Concept.-->
+			<xs:element minOccurs="0" name="name" type="xs:string"/>
+			<xs:element minOccurs="0" name="value" type="xs:string"/>
+			<xs:element minOccurs="0" name="valueRange" type="tns:IntervalType"/>
+			<xs:element minOccurs="0" name="validFor" type="tns:TimeIntervalType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : CustomerCreditProfileType ******
+An outline of the financial value (credit worthiness) of a customer.-->
+	<xs:complexType name="CustomerCreditProfileType">
+		<xs:sequence>
+			<!-- - - - Element : evaluationMessage - - -
+attribute to indicate the message sent by third parties when the colour is different from Green-->
+			<xs:element minOccurs="0" name="evaluationMessage" type="xs:string"/>
+			<!-- - - - Element : evaluationMessageNumber - - -
+attribute to indicate the message number sent by third parties when the colour is different from Green-->
+			<xs:element minOccurs="0" name="evaluationMessageNumber" type="xs:string"/>
+			<xs:element minOccurs="0" name="evaluationReason" type="xs:string"/>
+			<!-- - - - Element : timeStamp - - -
+timestamp when the response was sent by the third parties-->
+			<xs:element minOccurs="0" name="timeStamp" type="xs:dateTime"/>
+			<!-- - - - Element : evaluationColour - - -
+element to indicate the colour response received from external companies for the credit worthiness check. e.g GREEN ORANGE RED-->
+			<xs:element minOccurs="0" name="evaluationColour" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CustomerIdentifierType">
+		<xs:sequence>
+			<xs:element name="id" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+			<xs:element minOccurs="0" name="idContext" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : IntervalType ******
+Generic datatype that can express a range or interval of values. An interval is a set
+of consecutive values of any totally ordered datatype. An interval is thus a
+continuous subset of its base datatype.-->
+	<xs:complexType name="IntervalType">
+		<xs:sequence>
+			<xs:element name="low" type="xs:string"/>
+			<xs:element name="high" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : LabelType ******
+A generic purpose language specific text label.-->
+	<xs:complexType name="LabelType">
+		<xs:sequence>
+			<!-- - - - Element : text - - -
+the text content of the label-->
+			<xs:element name="text" type="xs:string"/>
+			<!-- - - - Element : language - - -
+the language in which the label text is defined.-->
+			<xs:element name="language" type="tns:LanguageCodeISOAlpha2Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LanguageCodeISOAlpha2Type">
+		<xs:sequence>
+			<xs:element name="alpha2Code" type="xs:string"/>
+			<xs:element minOccurs="0" name="idScope" type="tns:CodeValueType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : NameType ******
+Custom dataType used to provide a meaningfull name to a business concept.
+    Types and examples:
+    - type: { print name | display name | official
+    name | document name | etc...} when names are used for persons
+    - langName: language specific name
+    Comments:
+    A concept name has 2 dimensions:
+    - Language: in which the name is specified (LanguageISO2Code)
+    - Name type:-->
+	<xs:complexType name="NameType">
+		<xs:sequence>
+			<!-- - - - Element : defaultName - - -
+the default name value in the default language.
+the default name value in the default language-->
+			<xs:element name="defaultName" type="xs:string"/>
+			<!-- - - - Element : type - - -
+Classfiiation of the name type based on its use.
+Classification of the name type based on its use-->
+			<xs:element minOccurs="0" name="type" type="tns:CodeValueType"/>
+			<!-- - - - Element : languageName - - -
+the name provided in a specific language
+the name provided in a specific language-->
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="languageName" type="tns:LabelType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****** ComplexType : TimeIntervalType ******
+Defines a period (range) in time specified by a start and end date.-->
+	<xs:complexType name="TimeIntervalType">
+		<xs:sequence>
+			<xs:element name="startTimeStamp" type="xs:dateTime"/>
+			<xs:element name="endTimeStamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

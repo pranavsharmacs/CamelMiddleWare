@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:chksvc="urn:v1.checkservice.vss.objects.bgc" xmlns:req0="urn:v1.requestcheckcreditworthiness.bps.objects.bgc" xmlns:res0="urn:v1.responsecheckcreditworthiness.bps.objects.bgc" xmlns:tns="urn:v1.financialbackgroundchecking.bps.services.bgc" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:v1.financialbackgroundchecking.bps.services.bgc" version="1.0">
+	<!--=========================================================================
+@BEIM4SOA BEIM4SOA_V3.52.xsd
+
+* File Name      		: BPS-SVC-FinancialBackgroundChecking-1.0.xsd
+*
+* Author         		: Seenivasan MUTHIAH
+* Owner          		: Wilfried GIJS
+* Bgc analyst    		: Seenivasan MUTHIAH
+* Creation date  	    : 13-10-2015
+* Description    		: This service will be used for checking the financial background of the customer
+* Status        		: DRAFT
+*
+* History
+*   Seenivasan MUTHIAH	13-10-2015	1.0	Initial version
+
+=========================================================================-->
+	<xs:import namespace="urn:v1.checkservice.vss.objects.bgc" schemaLocation="../VSS-OBJ-CheckService-1.0/VSS-OBJ-CheckService-1.0.xsd"/>
+	<xs:import namespace="urn:v1.responsecheckcreditworthiness.bps.objects.bgc" schemaLocation="../BPS-OBJ-ResponseCheckCreditWorthiness-1.0/BPS-OBJ-ResponseCheckCreditWorthiness-1.0.xsd"/>
+	<xs:import namespace="urn:v1.requestcheckcreditworthiness.bps.objects.bgc" schemaLocation="../BPS-OBJ-RequestCheckCreditWorthiness-1.0/BPS-OBJ-RequestCheckCreditWorthiness-1.0.xsd"/>
+	<xs:element name="RequestDataCheckCreditworthiness" type="tns:RequestDataCheckCreditworthinessType"/>
+	<xs:complexType name="RequestDataCheckCreditworthinessType">
+		<xs:sequence>
+			<xs:element name="transactionData" type="tns:TransactionDataType"/>
+			<xs:element name="criteria" type="tns:CriteriaCheckType"/>
+		</xs:sequence>
+		<xs:attribute default="1.0" name="version" type="xs:string"/>
+	</xs:complexType>
+	<xs:element name="ResponseDataCheckCreditworthiness" type="tns:ResponseDataCheckCreditworthinessType"/>
+	<xs:complexType name="ResponseDataCheckCreditworthinessType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="customerCreditProfile" type="res0:CustomerCreditProfileType"/>
+			<xs:element minOccurs="0" name="customerIdentifier" type="res0:CustomerIdentifierType"/>
+			<!-- - - - Element : customerCharVal - - -
+name: edp_credit_check_id
+value: edp_credit_check.edp_credit_check_id
+name : wegener_id
+value :edp_credit_check.wegener_id-->
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="customerCharVal" type="res0:CustomerCharValType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TransactionDataType">
+		<xs:sequence>
+			<xs:element name="userContext" type="tns:UserContextType"/>
+			<xs:element minOccurs="0" name="note" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UserContextType">
+		<xs:sequence>
+			<xs:element name="applicationName" type="xs:string"/>
+			<xs:element name="correlationId" type="xs:string"/>
+			<xs:element name="userId" type="xs:string"/>
+			<!-- - - - Element : languageISO2Code - - -
+@Acronym ISO2 ISO2-->
+			<xs:element name="languageISO2Code" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CriteriaCheckType">
+		<xs:choice>
+			<xs:element name="customerIdentifier" type="req0:CustomerIdentifierType"/>
+			<!-- - - - Element : VATNumber - - -
+@Acronym VAT ValueAddedTaxe-->
+			<xs:element name="VATNumber" type="req0:VATNumberType"/>
+			<xs:element minOccurs="0" name="person" type="req0:PersonType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:element name="RequestDataCheckService" type="chksvc:RequestDataCheckServiceType"/>
+	<xs:element name="ResponseDataCheckService" type="chksvc:ResponseDataCheckServiceType"/>
+</xs:schema>

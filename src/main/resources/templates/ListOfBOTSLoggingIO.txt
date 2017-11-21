@@ -1,0 +1,10 @@
+<ListOfBOTSLoggingIO xmlns="http://www.siebel.com/xml/BGCBOTSLogging">
+	<ListOfBOTSLogging>
+		<BOTSLogging>
+			<ApplicationName>MCOM</ApplicationName>
+			<OrderID>R00000011000000NXE</OrderID>
+			<Status>Complete</Status>
+			<TimeStamp>08/24/2015 11:14:34</TimeStamp>
+		</BOTSLogging>
+	</ListOfBOTSLogging>
+</ListOfBOTSLoggingIO>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions
+     name="GetCustomerCreditWorthinessSHEReqABCSImpl"
+     targetNamespace="http://xmlns.oracle.com/GetCustomerCreditWorthinessSHEReqABCSImpl"
+     xmlns="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:ns2="http://www.siebel.com/xml/SHEQueryCreditDetailsResABM"
+     xmlns:ns1="http://www.siebel.com/xml/SHEQueryCreditDetailsReqABM"
+     xmlns:ns4="http://schemas.xmlsoap.org/ws/2002/07/secext"
+     xmlns:plnk="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:ns3="http://www.siebel.com/xml/BGCSoapException/V1"
+     xmlns:client="http://xmlns.oracle.com/GetCustomerCreditWorthinessSHEReqABCSImpl"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:corecom="http://xmlns.oracle.com/EnterpriseObjects/Core/Common/V2"
+     xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+     xmlns:ns5="urn:v4.context.vss.objects.bgc"
+    >
+    <documentation>
+        <abstractWSDL>http://el2705.bc:8003/soa-infra/services/default/GetCustomerCreditWorthinessSHEReqABCSImpl!7.8.1.0/apps/AIAMetaData/AIAComponents/ApplicationConnectorServiceLibrary/Siebel/V1/RequesterABCS/BGC/GetCustomerCreditWorthinessSHEReqABCSImpl.wsdl</abstractWSDL>
+    </documentation>
+    <plnk:partnerLinkType name="GetCustomerCreditWorthinessSHEReqABCSImpl">
+        <plnk:role name="GetCustomerCreditWorthinessSHEReqABCSImplProvider">
+            <plnk:portType name="client:GetCustomerCreditWorthinessSHEReqABCSImpl"/>
+        </plnk:role>
+    </plnk:partnerLinkType>
+    <import namespace="http://schemas.oracle.com/bpel/extension" location="http://el2705.bc:8003/soa-infra/services/default/GetCustomerCreditWorthinessSHEReqABCSImpl/apps/AIAMetaData/AIAComponents/UtilityArtifacts/RuntimeFault.wsdl"/>
+    <types>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.siebel.com/xml/SHEQueryCreditDetailsReqABM" schemaLocation="http://el2705.bc:8003/soa-infra/services/default/GetCustomerCreditWorthinessSHEReqABCSImpl/apps/AIAMetaData/AIAComponents/ApplicationObjectLibrary/Siebel/V1/schemas/BGC/CWC/SHEQueryCreditDetailsReqABM.xsd"/>
+        </schema>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.siebel.com/xml/SHEQueryCreditDetailsResABM" schemaLocation="http://el2705.bc:8003/soa-infra/services/default/GetCustomerCreditWorthinessSHEReqABCSImpl/apps/AIAMetaData/AIAComponents/ApplicationObjectLibrary/Siebel/V1/schemas/BGC/CWC/SHEQueryCreditDetailsResABM.xsd"/>
+        </schema>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://www.siebel.com/xml/BGCSoapException/V1" schemaLocation="http://el2705.bc:8003/soa-infra/services/default/GetCustomerCreditWorthinessSHEReqABCSImpl/apps/AIAMetaData/AIAComponents/ApplicationObjectLibrary/Siebel/V1/schemas/BGC/Fault/BGCException.xsd"/>
+        </schema>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://xmlns.oracle.com/EnterpriseObjects/Core/Common/V2" schemaLocation="http://el2705.bc:8003/soa-infra/services/default/GetCustomerCreditWorthinessSHEReqABCSImpl/apps/AIAMetaData/AIAComponents/EnterpriseObjectLibrary/Core/Common/V2/Meta.xsd"/>
+        </schema>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="http://schemas.xmlsoap.org/ws/2002/07/secext" schemaLocation="http://el2705.bc:8003/soa-infra/services/default/GetCustomerCreditWorthinessSHEReqABCSImpl/apps/AIAMetaData/AIAComponents/UtilityArtifacts/schemas/custom/sec_ext_BGC_fromSHE.xsd"/>
+        </schema>
+        <schema xmlns="http://www.w3.org/2001/XMLSchema">
+            <import namespace="urn:v4.context.vss.objects.bgc" schemaLocation="http://el2705.bc:8003/soa-infra/services/default/GetCustomerCreditWorthinessSHEReqABCSImpl/apps/AIAMetaData/BEIM/VSS/OBJ/Context/4.0/VSS-OBJ-Context-4.0.xsd"/>
+        </schema>
+    </types>
+    <message name="GetCustomerCreditWorthinessSHEReqABCSImplRequestMessage">
+        <part name="SHECreditworthinessRequest" element="ns1:SHECreditworthinessRequest"/>
+    </message>
+    <message name="GetCustomerCreditWorthinessSHEReqABCSImplResponseMessage">
+        <part name="SHEQueryCreditDetailsResABM" element="ns2:SHEQueryCreditDetailsResABM"/>
+    </message>
+    <message name="GetCustomerCreditWorthinessFaultMsg">
+        <part name="GetCustomerCreditWorthinessFault" element="ns3:BGCException"/>
+    </message>
+    <message name="VSSContextMsg">
+        <part name="VSSContext" element="ns5:Context"/>
+    </message>
+    <portType name="GetCustomerCreditWorthinessSHEReqABCSImpl">
+        <operation name="GetCustomerCreditWorthiness">
+            <input message="client:GetCustomerCreditWorthinessSHEReqABCSImplRequestMessage"/>
+            <output message="client:GetCustomerCreditWorthinessSHEReqABCSImplResponseMessage"/>
+            <fault name="fault" message="client:GetCustomerCreditWorthinessFaultMsg"/>
+        </operation>
+    </portType>
+    <binding name="GetCustomerCreditWorthinessSHEReqABCSImplBinding" type="client:GetCustomerCreditWorthinessSHEReqABCSImpl">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="GetCustomerCreditWorthiness">
+            <soap:operation style="document" soapAction="GetCustomerCreditWorthiness"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="fault">
+                <soap:fault name="fault" use="literal"/>
+            </fault>
+        </operation>
+    </binding>
+    <service name="client">
+        <port name="GetCustomerCreditWorthinessSHEReqABCSImpl_pt" binding="client:GetCustomerCreditWorthinessSHEReqABCSImplBinding">
+            <soap:address location="http://localhost:8003/GetCustomerCreditWorthiness"/>
+        </port>
+    </service>
+</definitions>

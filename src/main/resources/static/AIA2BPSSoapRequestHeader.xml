@@ -1,0 +1,14 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:v4.context.vss.objects.bgc" xmlns:urn1="urn:v1.customerconsultation.aia.services.bgc" xmlns:urn2="urn:v1.requestgetcustomermigrationstatus.aia.objects.bgc">
+	<soapenv:Header>
+		<urn:Context version="4.0">
+			<urn:correlationId>123</urn:correlationId>
+			<urn:consumerApplicationId>AIA</urn:consumerApplicationId>
+			<!--Optional:-->
+			<urn:endUserId>id973498</urn:endUserId>
+			<!--Optional:-->
+			<urn:endUserLanguage>EN</urn:endUserLanguage>
+			<!--Optional:-->
+			<urn:propagatedKey>?</urn:propagatedKey>
+		</urn:Context>
+	</soapenv:Header>
+	<soapenv:Body>
