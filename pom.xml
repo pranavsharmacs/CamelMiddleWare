@@ -29,10 +29,11 @@
 		<jdbc.path>${url}/jdbc-6.jar</jdbc.path>
 		<aqapi.path>${url}/aqapi-11g.jar</aqapi.path>
 		<spring.boot.mainclass>com.proximus.bootcamel.she.camelmiddleware.CamelmiddlewareApplication</spring.boot.mainclass>
-        </properties>
+	</properties>
 
 	<dependencies>
-		<!--Exception in thread "pool-2-thread-1" java.lang.NoClassDefFoundError: org/apache/http/HttpEntity -->
+		<!--Exception in thread "pool-2-thread-1" java.lang.NoClassDefFoundError:
+			org/apache/http/HttpEntity -->
 
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -99,7 +100,7 @@
 			<version>${cxf.version}</version>
 		</dependency>
 
-    <dependency>
+		<dependency>
 			<groupId>org.apache.cxf</groupId>
 			<artifactId>cxf-rt-bindings-soap</artifactId>
 			<version>${cxf.version}</version>
@@ -113,12 +114,6 @@
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-cxf</artifactId>
-			<version>${version.camel}</version>
-		</dependency>
-
-    <dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-groovy</artifactId>
 			<version>${version.camel}</version>
 		</dependency>
 
@@ -252,6 +247,18 @@
 						<configuration>
 							<sourceRoot>${basedir}/src/main/java</sourceRoot>
 							<wsdlOptions>
+
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/CheckCreditworthinessBPS/BPS-SVC-FinancialBackgroundChecking-1.0-standard-http_binding.wsdl</wsdl>
+									<serviceName>BPS-FinancialBackgroundChecking-1.0-Service</serviceName>
+									<wsdlLocation>/wsdl/CheckCreditworthinessBPS/BPS-SVC-FinancialBackgroundChecking-1.0-standard-http_binding.wsdl</wsdlLocation>
+								</wsdlOption>
+
+								<wsdlOption>
+									<wsdl>${basedir}/src/main/resources/wsdl/CheckCreditworthinessAIA/AIA.wsdl</wsdl>
+									<serviceName>client</serviceName>
+									<wsdlLocation>/wsdl/CheckCreditworthinessAIA/AIA.wsdl</wsdlLocation>
+								</wsdlOption>
 
 								<wsdlOption>
 									<wsdl>${basedir}/src/main/resources/wsdl/CustomerConsultationAIA/AIA-SVC-CustomerConsultation-1.0-standard-http_binding.wsdl</wsdl>
