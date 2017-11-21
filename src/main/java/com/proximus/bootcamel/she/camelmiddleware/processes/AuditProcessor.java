@@ -33,6 +33,8 @@ public class AuditProcessor implements Processor {
 
 	public Audit populateAuditPOJO(Exchange exchange) {
 
+		//TODO : Set the component specific to the flow in Audit object
+
 		// Create the Audit object here
 		Audit audit = new Audit();
 		//Message message = exchange.getIn();
@@ -53,6 +55,7 @@ public class AuditProcessor implements Processor {
 		String status = exchange.getProperty("TransactionStatus").toString();
 		String actionName = exchange.getProperty("ActionName").toString();
 		String subActionName = exchange.getProperty("SubActionName").toString();
+		String component = exchange.getProperty("Component").toString();
 
 		audit.setActionName(actionName);
 		audit.setActionSubName(subActionName);

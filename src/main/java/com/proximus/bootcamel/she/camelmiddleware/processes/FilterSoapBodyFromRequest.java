@@ -2,6 +2,7 @@ package com.proximus.bootcamel.she.camelmiddleware.processes;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Map;
@@ -79,10 +80,61 @@ public class FilterSoapBodyFromRequest {
 	}
 
 	@Handler
-	public void padSHESoapEnvelop(Exchange exchange, @Headers Map<String, Object> headers) {
-		LOGGER.debug("FilterSoapBodyFromRequest::padSHESoapEnvelop::enters");
+	public void filterSHESoapRequest(Exchange exchange, @Headers Map<String, Object> headers) throws Exception {
+		LOGGER.debug("FilterSoapBodyFromRequest::filterSHESoap()::enters");
+
 		String soapRequest = exchange.getIn().getBody(String.class);
-		System.out.println("Inside FilterSoapBodyFromRequest::pasSHESoapEnvelop : " + soapRequest);
+		// System.out.println("Request XML is ::::: " + soapRequest);
+		// below part is used to set the headers used for elastic search
+		// System.out.println("Header : " + header);
+		int startIndex = soapRequest.indexOf("<soapenv:Body>");
+		int endIndex = soapRequest.indexOf("</soapenv:Body>");
+		String filteredSoapRequest = soapRequest.substring(startIndex + 14, endIndex).trim();
+		// System.out.println("Filtered Soap Request is : " +
+		// soapRequest.substring(startIndex + 14, endIndex).trim());
+		exchange.getIn().setBody(filteredSoapRequest, String.class);
+	}
+
+	@Handler
+	public void padSHESoapRequestEnvelop(Exchange exchange, @Headers Map<String, Object> headers) {
+		LOGGER.debug("FilterSoapBodyFromRequest::padSHESoapRequestEnvelop::enters");
+		String soapRequest = exchange.getIn().getBody(String.class);
+		System.out.println("Inside FilterSoapBodyFromRequest::padSHESoapRequestEnvelop : " + soapRequest);
+		// soapRequest.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+		// "");
+		// TODO : correct below code, it is bad way to replace the xml version
+		// tag
+		soapRequest = soapRequest.substring(38);
+		String sheSoapHeader = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Header/><soapenv:Body>";
+		String sheSoapFooter = "</soapenv:Body></soapenv:Envelope>";
+		String paddedSHESoapRequest = sheSoapHeader + soapRequest + sheSoapFooter;
+		// System.out.println("SHE soap request message : " +
+		// paddedSHESoapRequest);
+		exchange.getOut().setBody(paddedSHESoapRequest, String.class);
+	}
+
+	@Handler
+	public void padBPSSoapRequestEnvelop(Exchange exchange, @Headers Map<String, Object> headers) throws Exception {
+		LOGGER.debug("FilterSoapBodyFromRequest::padBPSSoapRequestEnvelop::enters");
+		String soapRequest = exchange.getIn().getBody(String.class);
+		System.out.println("Inside FilterSoapBodyFromRequest::padBPSSoapRequestEnvelop : " + soapRequest);
+		soapRequest = soapRequest.substring(38);
+		FileInputStream fisTargetFile;
+		fisTargetFile = new FileInputStream(new File("src/main/resources/static/AIA2BPSSoapRequestHeader.xml"));
+		String aia2BPSSoapRequestHeader = IOUtils.toString(fisTargetFile, "UTF-8");
+		String sheSoapFooter = "</soapenv:Body></soapenv:Envelope>";
+		String paddedBPSSoapRequest = aia2BPSSoapRequestHeader + soapRequest + sheSoapFooter;
+		// System.out.println("SHE soap request message : " +
+		// paddedSHESoapRequest);
+		exchange.getOut().setBody(paddedBPSSoapRequest, String.class);
+		exchange.getIn().setBody(paddedBPSSoapRequest, String.class);
+	}
+
+	@Handler
+	public void padSHESoapResponseEnvelop(Exchange exchange, @Headers Map<String, Object> headers) {
+		LOGGER.debug("FilterSoapBodyFromRequest::padSHESoapResponseEnvelop::enters");
+		String soapRequest = exchange.getIn().getBody(String.class);
+		System.out.println("Inside FilterSoapBodyFromRequest::padSHESoapResponseEnvelop : " + soapRequest);
 		// soapRequest.replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
 		// "");
 		// TODO : correct below code, it is bad way to replace the xml version
@@ -118,7 +170,7 @@ public class FilterSoapBodyFromRequest {
 	 */
 
 	@Handler
-	public void filterSHESoap(Exchange exchange, @Headers Map<String, Object> headers) throws Exception {
+	public void filterSHESoapResponse(Exchange exchange, @Headers Map<String, Object> headers) throws Exception {
 		LOGGER.debug("FilterSoapBodyFromRequest::filterSHESoap()::enters");
 
 		String soapRequest = exchange.getIn().getBody(String.class);
@@ -257,6 +309,25 @@ public class FilterSoapBodyFromRequest {
 		exchange.getOut().getHeaders().put("JMSCorrelationID", exchange.getProperty("JMSCorrelationID"));
 		exchange.getOut().getHeaders().put("TransactionStatus", exchange.getProperty("TransactionStatus"));
 		exchange.getOut().setBody(paddedSHESoapRequest, String.class);
+	}
+
+	@Handler
+	public void padAIASoapResponseEnvelop(Exchange exchange, @Headers Map<String, Object> headers) throws Exception {
+		LOGGER.debug("FilterSoapBodyFromRequest::padAIASoapResponseEnvelop::enters");
+		String soapResponse = exchange.getIn().getBody(String.class);
+		soapResponse = soapResponse.trim();
+		if (soapResponse.contains("<?xml version=")) {
+			soapResponse = soapResponse.substring(38);
+		}
+		String paddedSHESoapResponse = null;
+		String sheSoapFooter = "</env:Body></env:Envelope>";
+		String aia2sheSoapResponseHeader = null;
+		FileInputStream fisTargetFile = null;
+		fisTargetFile = new FileInputStream(new File("src/main/resources/static/AIA2SHESoapResponseHeader.xml"));
+		aia2sheSoapResponseHeader = IOUtils.toString(fisTargetFile, "UTF-8");
+		paddedSHESoapResponse = aia2sheSoapResponseHeader + soapResponse + sheSoapFooter;
+		System.out.println("Padded SHE Soap Response : " + paddedSHESoapResponse);
+		exchange.getOut().setBody(paddedSHESoapResponse, String.class);
 	}
 
 }
