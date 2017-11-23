@@ -52,7 +52,6 @@
 		<!-- Sonic to SHE "mcomEventDataOrderProgressInQ" -->
 		<camel:route id="MCOMEventDataOrderProgress">
 			<camel:from uri="ref:mcomEventDataOrderProgressInQ" />
-
 			<camel:setProperty propertyName="JMSCorrelationID">
 				<camel:simple>${header.JMSCorrelationID}</camel:simple>
 			</camel:setProperty>
@@ -77,6 +76,8 @@
 			<camel:setProperty propertyName="Component">
 				<camel:simple>${properties:sonic.mcomEventDataOrderProgressInQ.q.component}</camel:simple>
 			</camel:setProperty>
+
+			<camel:to uri="bean:auditProcessor?method=processDetailed" />
 
 			<camel:to
 				uri="bean:endpointLogger?method=logEvent(*,*,*,'Received Order Status Notification from MCOM at AIA',true)" />
@@ -103,6 +104,8 @@
 			</camel:setProperty>
 
 			<camel:to uri="bean:auditProcessor?method=process" />
+			<camel:to uri="bean:auditProcessor?method=processDetailed" />
+
 
 		</camel:route>
 
@@ -134,6 +137,9 @@
 				<camel:simple>${properties:sonic.mcomBGCBOTSLoggingOrderStatusOutQ.q.component}</camel:simple>
 			</camel:setProperty>
 
+			<camel:to uri="bean:auditProcessor?method=processDetailed" />
+
+
 			<camel:to
 				uri="bean:endpointLogger?method=logEvent(*,*,*,'Received ListOfBOTSLoggingIO Notification from SHE at AIA',true)" />
 			<camel:to uri="bean:logAudit?method=process" />
@@ -159,12 +165,100 @@
 			</camel:setProperty>
 
 			<camel:to uri="bean:auditProcessor?method=process" />
+			<camel:to uri="bean:auditProcessor?method=processDetailed" />
+
 		</camel:route>
 
+
+
 		<!-- HTTP Service Routes below -->
+
 		<camel:route id="soapHttpCustomerConsultationAIA"
 			streamCache="true">
 			<camel:from uri="cxf:bean:soapHttpCustomerConsultationAIA" />
+			<camel:loadBalance>
+				<camel:custom ref="roundRobinRef" />
+				<camel:to uri="cxf:bean:soapHttpCustomerConsultationAIA1" />
+				<camel:to uri="cxf:bean:soapHttpCustomerConsultationAIA2" />
+			</camel:loadBalance>
+		</camel:route>
+
+		<camel:route id="soapHttpCustomerConsultationAIA1"
+			streamCache="true">
+			<camel:from uri="cxf:bean:soapHttpCustomerConsultationAIA1" />
+			<camel:to uri="log:Request at soapHttpCustomerConsultationAIA1" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Received CustomerConsultation request at AIA',true)" />
+			<camel:setProperty propertyName="MessageStartTime">
+				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="EnvironmentName">
+				<camel:simple>${properties:env.name}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="ActionName">
+				<camel:simple>${properties:httpcustomerconsultation.actionName}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="SubActionName">
+				<camel:simple>${properties:httpcustomerconsultation.subActionName}</camel:simple>
+			</camel:setProperty>
+			<camel:setProperty propertyName="Component">
+				<camel:simple>${properties:httpcustomerconsultation.component}</camel:simple>
+			</camel:setProperty>
+			<camel:to uri="bean:filterSoapBodyFromRequest?method=filterESBSoap" />
+			<camel:to
+				uri="xslt://AIAXslts/CustomerConsultation-Http/xform_GetCustomerMigrationStatusABM_to_QueryCustomerPartyEBM_1.xsl" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Request from ESB into AIA internal Request message.',true)" />
+			<camel:to
+				uri="xslt://AIAXslts/CustomerConsultation-Http/Transform_QueryCustomerPartyEBM_to_CustomerConsulatationSHEInput_2.xsl" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Request from AIA into SIEBEL Request message.',true)" />
+			<camel:to
+				uri="bean:filterSoapBodyFromRequest?method=padSHESoapRequestEnvelop" />
+			<!-- <camel:to uri="log:${body}" /> -->
+			<camel:setHeader headerName="SOAPAction">
+				<camel:constant>"document/http://siebel.com/CustomUI:BGCCustomerConsultationgetCustomerMigrationStatus_2"</camel:constant>
+			</camel:setHeader>
+			<camel:setHeader headerName="operationName">
+				<camel:constant>BGCCustomerConsultationgetCustomerMigrationStatus_2</camel:constant>
+			</camel:setHeader>
+			<camel:setHeader headerName="operationNamespace">
+				<camel:constant>http://siebel.com/CustomUI</camel:constant>
+			</camel:setHeader>
+			<camel:to uri="cxf:bean:soapHttpSiebelEndpoint" />
+			<!-- <camel:log message="SHE Response: ${body} >>>>>>>>>>" /> -->
+			<camel:to
+				uri="bean:filterSoapBodyFromRequest?method=filterSHESoapResponse" />
+			<camel:choice>
+				<camel:when>
+					<camel:simple>${header.SOAPError} != 'FunctionalError' and ${header.SOAPError} != 'TechnicalError'</camel:simple>
+					<camel:to
+						uri="xslt://AIAXslts/CustomerConsultation-Http/Transform_CustomerConsultationOutput_to_QueryCustomerPartyEBM_3.xsl" />
+					<!-- <camel:to uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform
+						Response from SHE into AIA internal Response message.',true)" /> -->
+					<camel:to
+						uri="xslt://AIAXslts/CustomerConsultation-Http/xform_QueryCustomerPartyResponseEBM_to_GetCustomerMigrationStatusRespABM_4.xsl" />
+					<!-- <camel:to uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform
+						Response from AIA into ESB Response message.',true)" /> -->
+				</camel:when>
+			</camel:choice>
+
+			<camel:setProperty propertyName="MessageEndTime">
+				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
+			</camel:setProperty>
+			<camel:to uri="bean:filterSoapBodyFromRequest?method=padESBSoapEnvelop" />
+			<camel:to
+				uri="bean:endpointLogger?method=logEvent(*,*,*,'Response for CustomerConsultation request at AIA',true)" />
+			<camel:multicast>
+				<!-- <camel:convertBodyTo type="java.lang.String" /> -->
+				<camel:to uri="bean:auditProcessor?method=process" />
+			</camel:multicast>
+		</camel:route>
+
+		<camel:route id="soapHttpCustomerConsultationAIA2"
+			streamCache="true">
+			<camel:from uri="cxf:bean:soapHttpCustomerConsultationAIA2" />
+			<camel:to uri="log:Request at soapHttpCustomerConsultationAIA2" />
 			<camel:to
 				uri="bean:endpointLogger?method=logEvent(*,*,*,'Received CustomerConsultation request at AIA',true)" />
 			<camel:setProperty propertyName="MessageStartTime">
@@ -294,8 +388,10 @@
 				uri="xslt://AIAXslts/CheckCreditworthinessAIA-Http/ResponseEBM_to_resABM_4.xsl" />
 			<camel:to
 				uri="bean:endpointLogger?method=logEvent(*,*,*,'Transform Response from AIA into SHE Response message.',true)" />
+			<camel:to uri="bean:xml2jsonConverter?method=convertRequestToJson" />
 			<camel:to
 				uri="bean:filterSoapBodyFromRequest?method=padAIASoapResponseEnvelop" />
+
 			<camel:setProperty propertyName="MessageEndTime">
 				<camel:simple>${date:now:yyyy-MM-dd'T'HH:mm:ss:SS'Z'}</camel:simple>
 			</camel:setProperty>
@@ -406,6 +502,11 @@
 
 	<bean id="defaultErrorHandler" class="org.apache.camel.builder.DefaultErrorHandlerBuilder" />
 
+
+	<bean id="roundRobinRef"
+		class="org.apache.camel.processor.loadbalancer.RoundRobinLoadBalancer" />
+
+
 	<cxf:cxfEndpoint id="soapHttpCustomerConsultationAIA"
 		serviceClass="bgc.services.aia.customerconsultation.v1.CustomerConsultationPortType"
 		wsdlURL="/wsdl/CustomerConsultationAIA/AIA-SVC-CustomerConsultation-1.0-standard-http_binding.wsdl"
@@ -414,6 +515,25 @@
 			<entry key="dataFormat" value="MESSAGE" />
 		</cxf:properties>
 	</cxf:cxfEndpoint>
+
+	<cxf:cxfEndpoint id="soapHttpCustomerConsultationAIA1"
+		serviceClass="bgc.services.aia.customerconsultation.v1.CustomerConsultationPortType"
+		wsdlURL="/wsdl/CustomerConsultationAIA/AIA-SVC-CustomerConsultation-1.0-standard-http_binding.wsdl"
+		address="${httpcustomerconsultation.soapHttpCustomerConsultationAIA1}">
+		<cxf:properties>
+			<entry key="dataFormat" value="MESSAGE" />
+		</cxf:properties>
+	</cxf:cxfEndpoint>
+
+	<cxf:cxfEndpoint id="soapHttpCustomerConsultationAIA2"
+		serviceClass="bgc.services.aia.customerconsultation.v1.CustomerConsultationPortType"
+		wsdlURL="/wsdl/CustomerConsultationAIA/AIA-SVC-CustomerConsultation-1.0-standard-http_binding.wsdl"
+		address="${httpcustomerconsultation.soapHttpCustomerConsultationAIA2}">
+		<cxf:properties>
+			<entry key="dataFormat" value="MESSAGE" />
+		</cxf:properties>
+	</cxf:cxfEndpoint>
+
 
 	<cxf:cxfEndpoint id="soapHttpFinancialBackgroundCheckingAIA"
 		serviceClass="com.oracle.xmlns.getcustomercreditworthinessshereqabcsimpl.GetCustomerCreditWorthinessSHEReqABCSImpl"
